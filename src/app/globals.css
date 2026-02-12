@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-bg: #0b0b12;
+  --color-bg-card: #12121c;
+  --color-bg-hover: #1a1a28;
+  --color-border: #1e1e2e;
+  --color-border-hover: rgba(255, 255, 255, 0.15);
+  --color-accent: #c084fc;
+  --color-accent-dim: #9333ea;
+  --color-fuchsia: #f0abfc;
+  --color-text: #e2e2e8;
+  --color-text-dim: #6b6b80;
+  --color-text-faint: #444455;
+  --color-red: #ff4d6a;
+  --color-orange: #ff9f43;
+  --color-green: #00ff88;
+  --color-teal: #00ffc8;
+  --color-cyan: #06b6d4;
+  --color-blue: #38bdf8;
+  --color-purple: #a78bfa;
+  --color-yellow: #ffd93d;
+
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Fira Code", ui-monospace, monospace;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background-color: rgba(192, 132, 252, 0.3);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-dim);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-bg);
+}
+
+.scanline {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+}
+
+.glow-tl {
+  position: fixed;
+  top: -20%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(192, 132, 252, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.glow-br {
+  position: fixed;
+  bottom: -20%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(240, 171, 252, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(1px, -1px); }
+  60% { transform: translate(-1px, 2px); }
+  80% { transform: translate(2px, -1px); }
+  100% { transform: translate(0); }
+}
+
+.glitch-hover:hover {
+  animation: glitch 0.3s ease-in-out;
+}
+
+[data-rehype-pretty-code-figure] pre {
+  overflow-x: auto;
+  padding: 1rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background: var(--color-bg-card) !important;
+}
+
+[data-rehype-pretty-code-figure] code {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  counter-reset: line;
+  display: grid;
+}
+
+[data-rehype-pretty-code-figure] code > [data-line] {
+  padding: 0 1.25rem;
+  border-left: 2px solid transparent;
+}
+
+[data-rehype-pretty-code-figure] code > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1.5rem;
+  margin-right: 1.25rem;
+  text-align: right;
+  color: var(--color-text-faint);
+  font-size: 0.8rem;
+}
+
+[data-rehype-pretty-code-figure] code [data-highlighted-line] {
+  background: rgba(192, 132, 252, 0.08);
+  border-left-color: var(--color-accent);
+}
+
+[data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  color: var(--color-text-dim);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+[data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] + pre {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+[data-rehype-pretty-code-figure] code [data-highlighted-chars] {
+  background: rgba(192, 132, 252, 0.2);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.prose {
+  --tw-prose-body: var(--color-text);
+  --tw-prose-headings: #fff;
+  --tw-prose-links: var(--color-accent);
+  --tw-prose-bold: #fff;
+  --tw-prose-code: var(--color-fuchsia);
+  --tw-prose-pre-bg: var(--color-bg-card);
+  --tw-prose-pre-code: var(--color-text);
+  --tw-prose-quotes: var(--color-text-dim);
+  --tw-prose-quote-borders: var(--color-accent);
+  --tw-prose-hr: var(--color-border);
+  --tw-prose-th-borders: var(--color-border);
+  --tw-prose-td-borders: var(--color-border);
+}
+
+.prose a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+
+.prose a:hover {
+  color: var(--color-fuchsia);
+}
+
+.prose :where(code):not(:where(pre *)) {
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  background: rgba(192, 132, 252, 0.1);
+  font-size: 0.875em;
+}
+
+.prose :where(code):not(:where(pre *))::before,
+.prose :where(code):not(:where(pre *))::after {
+  content: none;
+}

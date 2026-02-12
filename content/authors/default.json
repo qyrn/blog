@@ -1,0 +1,10 @@
+{
+  "name": "pseudo",
+  "bio": "Apprenti pentester. Writeups, tutoriels et veille cybersécurité.",
+  "avatar": "/images/avatar.png",
+  "links": {
+    "github": "",
+    "linkedin": "",
+    "hackthebox": ""
+  }
+}
