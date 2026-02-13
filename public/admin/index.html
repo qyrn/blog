@@ -4,8 +4,88 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin | [pseudo].sh</title>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   </head>
   <body>
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script>
+      const defined = (v) => v !== undefined && v !== null;
+      const fieldsFR = [
+        { label: "Titre", name: "title", widget: "string" },
+        { label: "Slug", name: "slug", widget: "string", pattern: ["^[a-z0-9-]+$", "Minuscules, chiffres et tirets uniquement"] },
+        { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false },
+        { label: "Langue", name: "lang", widget: "hidden", default: "fr" },
+        { label: "Slug de traduction", name: "translationSlug", widget: "string", required: false, hint: "Slug commun pour lier FR/EN" },
+        { label: "Type", name: "type", widget: "select", options: [
+          { label: "Writeup", value: "writeup" },
+          { label: "Tutoriel", value: "tutorial" },
+          { label: "Journal", value: "journal" },
+          { label: "Veille", value: "watch" }
+        ]},
+        { label: "Catégorie", name: "category", widget: "select", options: ["Web","Network","Privesc","OSINT","Forensics","Crypto","RE","Misc"] },
+        { label: "Difficulté", name: "difficulty", widget: "select", options: ["Débutant","Intermédiaire","Avancé"] },
+        { label: "Tags", name: "tags", widget: "list", allow_add: true, field: { label: "Tag", name: "tag", widget: "string" } },
+        { label: "Plateforme", name: "platform", widget: "string", required: false, hint: "Ex: Hack The Box, TryHackMe" },
+        { label: "Résumé", name: "excerpt", widget: "text" },
+        { label: "Publié", name: "published", widget: "boolean", default: true },
+        { label: "Contenu", name: "body", widget: "markdown" }
+      ];
+      const fieldsEN = [
+        { label: "Title", name: "title", widget: "string" },
+        { label: "Slug", name: "slug", widget: "string", pattern: ["^[a-z0-9-]+$", "Lowercase, digits and hyphens only"] },
+        { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false },
+        { label: "Language", name: "lang", widget: "hidden", default: "en" },
+        { label: "Translation slug", name: "translationSlug", widget: "string", required: false, hint: "Shared slug to link FR/EN" },
+        { label: "Type", name: "type", widget: "select", options: [
+          { label: "Writeup", value: "writeup" },
+          { label: "Tutorial", value: "tutorial" },
+          { label: "Journal", value: "journal" },
+          { label: "Watch", value: "watch" }
+        ]},
+        { label: "Category", name: "category", widget: "select", options: ["Web","Network","Privesc","OSINT","Forensics","Crypto","RE","Misc"] },
+        { label: "Difficulty", name: "difficulty", widget: "select", options: ["Débutant","Intermédiaire","Avancé"] },
+        { label: "Tags", name: "tags", widget: "list", allow_add: true, field: { label: "Tag", name: "tag", widget: "string" } },
+        { label: "Platform", name: "platform", widget: "string", required: false, hint: "E.g. Hack The Box, TryHackMe" },
+        { label: "Excerpt", name: "excerpt", widget: "text" },
+        { label: "Published", name: "published", widget: "boolean", default: true },
+        { label: "Content", name: "body", widget: "markdown" }
+      ];
+
+      CMS.init({
+        config: {
+          backend: {
+            name: "github",
+            repo: "qyrn/blog",
+            branch: "master",
+            base_url: "https://blog-wheat-three-44.vercel.app",
+            auth_endpoint: "/api/auth"
+          },
+          media_folder: "public/images/uploads",
+          public_folder: "/images/uploads",
+          slug: { encoding: "ascii", clean_accents: true },
+          collections: [
+            {
+              name: "posts-fr",
+              label: "Articles (FR)",
+              folder: "content/posts/fr",
+              create: true,
+              extension: "mdx",
+              format: "frontmatter",
+              slug: "{{slug}}",
+              fields: fieldsFR
+            },
+            {
+              name: "posts-en",
+              label: "Articles (EN)",
+              folder: "content/posts/en",
+              create: true,
+              extension: "mdx",
+              format: "frontmatter",
+              slug: "{{slug}}",
+              fields: fieldsEN
+            }
+          ]
+        }
+      });
+    </script>
   </body>
 </html>
