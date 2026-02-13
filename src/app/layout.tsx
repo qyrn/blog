@@ -23,6 +23,17 @@ export const metadata: Metadata = {
   },
   description: "Blog cybersécurité - Writeups, tutoriels et veille technique",
   icons: { icon: "/favicon.ico" },
+  metadataBase: new URL("https://pseudo.sh"),
+  alternates: {
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    siteName: "[pseudo].sh",
+  },
 };
 
 export default function RootLayout({
