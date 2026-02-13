@@ -4,12 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin | [pseudo].sh</title>
+    <script>window.CMS_MANUAL_INIT = true;</script>
   </head>
   <body>
+    <div id="nc-root"></div>
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
     <script>
-      const defined = (v) => v !== undefined && v !== null;
-      const fieldsFR = [
+      var fieldsFR = [
         { label: "Titre", name: "title", widget: "string" },
         { label: "Slug", name: "slug", widget: "string", pattern: ["^[a-z0-9-]+$", "Minuscules, chiffres et tirets uniquement"] },
         { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false },
@@ -29,7 +30,7 @@
         { label: "Publié", name: "published", widget: "boolean", default: true },
         { label: "Contenu", name: "body", widget: "markdown" }
       ];
-      const fieldsEN = [
+      var fieldsEN = [
         { label: "Title", name: "title", widget: "string" },
         { label: "Slug", name: "slug", widget: "string", pattern: ["^[a-z0-9-]+$", "Lowercase, digits and hyphens only"] },
         { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false },
