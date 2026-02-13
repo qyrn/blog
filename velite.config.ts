@@ -35,7 +35,7 @@ export default defineConfig({
             "RE",
             "Misc",
           ]),
-          difficulty: s.enum(["Débutant", "Intermédiaire", "Avancé"]),
+          difficulty: s.enum(["Easy", "Medium", "Hard"]),
           tags: s.array(s.string()),
           platform: s.string().optional(),
           excerpt: s.string().max(500),

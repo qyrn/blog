@@ -18,14 +18,14 @@ export const metadata: Metadata = {
 };
 
 const skills = [
-  { name: "Pentesting", level: "Avancé" },
-  { name: "OSINT", level: "Avancé" },
-  { name: "Network Security", level: "Intermédiaire" },
-  { name: "Web Security", level: "Avancé" },
-  { name: "Reverse Engineering", level: "Intermédiaire" },
-  { name: "Forensics", level: "Intermédiaire" },
-  { name: "Linux Administration", level: "Avancé" },
-  { name: "Python / Scripting", level: "Avancé" },
+  { name: "Pentesting", level: "Hard" },
+  { name: "OSINT", level: "Hard" },
+  { name: "Network Security", level: "Medium" },
+  { name: "Web Security", level: "Hard" },
+  { name: "Reverse Engineering", level: "Medium" },
+  { name: "Forensics", level: "Medium" },
+  { name: "Linux Administration", level: "Hard" },
+  { name: "Python / Scripting", level: "Hard" },
 ];
 
 const certifications = [
@@ -96,7 +96,7 @@ export default function AboutPage() {
             >
               <span className="text-sm text-text">{skill.name}</span>
               <span className={`text-xs px-2 py-0.5 rounded border ${
-                skill.level === "Avancé"
+                skill.level === "Hard"
                   ? "border-green/30 text-green bg-green/5"
                   : "border-orange/30 text-orange bg-orange/5"
               }`}>

@@ -19,9 +19,9 @@ export const CATEGORIES: { value: Category; label: string }[] = [
 ];
 
 export const DIFFICULTIES: { value: Difficulty; label: string; color: string }[] = [
-  { value: "Débutant", label: "Débutant", color: "#00ff88" },
-  { value: "Intermédiaire", label: "Intermédiaire", color: "#ff9f43" },
-  { value: "Avancé", label: "Avancé", color: "#ff4d6a" },
+  { value: "Easy", label: "Easy", color: "#00ff88" },
+  { value: "Medium", label: "Medium", color: "#ff9f43" },
+  { value: "Hard", label: "Hard", color: "#ff4d6a" },
 ];
 
 export const LANGS: { value: Lang; label: string }[] = [
@@ -48,7 +48,7 @@ export const CATEGORY_STYLES: Record<Category, string> = {
 };
 
 export const DIFFICULTY_STYLES: Record<Difficulty, string> = {
-  "Débutant": "bg-green/20 border-green text-green",
-  "Intermédiaire": "bg-orange/20 border-orange text-orange",
-  "Avancé": "bg-red/20 border-red text-red",
+  "Easy": "bg-green/20 border-green text-green",
+  "Medium": "bg-orange/20 border-orange text-orange",
+  "Hard": "bg-red/20 border-red text-red",
 };

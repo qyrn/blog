@@ -10,7 +10,7 @@ export type Category =
   | "RE"
   | "Misc";
 
-export type Difficulty = "Débutant" | "Intermédiaire" | "Avancé";
+export type Difficulty = "Easy" | "Medium" | "Hard";
 
 export type Lang = "fr" | "en";
 
