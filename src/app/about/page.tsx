@@ -48,6 +48,16 @@ const socials = [
     label: "Email",
     href: siteConfig.author.email ? `mailto:${siteConfig.author.email}` : "",
   },
+  {
+    icon: Terminal,
+    label: "Hack The Box",
+    href: siteConfig.author.hackthebox,
+  },
+  {
+    icon: Target,
+    label: "TryHackMe",
+    href: siteConfig.author.tryhackme,
+  },
 ];
 
 export default function AboutPage() {
