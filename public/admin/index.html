@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin | [pseudo].sh</title>
+    <title>Admin | qyrn.sh</title>
     <script>window.CMS_MANUAL_INIT = true;</script>
   </head>
   <body>
@@ -20,7 +20,8 @@
           { label: "Writeup", value: "writeup" },
           { label: "Tutoriel", value: "tutorial" },
           { label: "Journal", value: "journal" },
-          { label: "Veille", value: "watch" }
+          { label: "Veille", value: "watch" },
+          { label: "Incident", value: "incident" }
         ]},
         { label: "Catégorie", name: "category", widget: "select", options: ["Web","Network","Privesc","OSINT","Forensics","Crypto","RE","Misc"] },
         { label: "Difficulté", name: "difficulty", widget: "select", options: ["Easy","Medium","Hard"] },
@@ -28,7 +29,7 @@
         { label: "Plateforme", name: "platform", widget: "string", required: false, hint: "Ex: Hack The Box, TryHackMe" },
         { label: "Résumé", name: "excerpt", widget: "text" },
         { label: "Publié", name: "published", widget: "boolean", default: true },
-        { label: "Contenu", name: "body", widget: "markdown" }
+        { label: "Contenu", name: "body", widget: "markdown", default: "## Contexte\n\nPourquoi j'ai fait ça. Quel problème, quel challenge, quel outil.\n\n## Ce que j'ai fait\n\nLes étapes concrètes. Commandes, screenshots, config.\n\n```bash\n# commandes ici\n```\n\n## Ce que j'ai appris\n\nLe takeaway. Ce qui m'a surpris, ce que je ne savais pas avant.\n\n## Ressources\n\n- [Lien 1](url)\n- [Lien 2](url)" }
       ];
       var fieldsEN = [
         { label: "Title", name: "title", widget: "string" },
@@ -40,7 +41,8 @@
           { label: "Writeup", value: "writeup" },
           { label: "Tutorial", value: "tutorial" },
           { label: "Journal", value: "journal" },
-          { label: "Watch", value: "watch" }
+          { label: "Watch", value: "watch" },
+          { label: "Incident", value: "incident" }
         ]},
         { label: "Category", name: "category", widget: "select", options: ["Web","Network","Privesc","OSINT","Forensics","Crypto","RE","Misc"] },
         { label: "Difficulty", name: "difficulty", widget: "select", options: ["Easy","Medium","Hard"] },
@@ -48,7 +50,7 @@
         { label: "Platform", name: "platform", widget: "string", required: false, hint: "E.g. Hack The Box, TryHackMe" },
         { label: "Excerpt", name: "excerpt", widget: "text" },
         { label: "Published", name: "published", widget: "boolean", default: true },
-        { label: "Content", name: "body", widget: "markdown" }
+        { label: "Content", name: "body", widget: "markdown", default: "## Context\n\nWhy I did this. What problem, what challenge, what tool.\n\n## What I did\n\nConcrete steps. Commands, screenshots, config.\n\n```bash\n# commands here\n```\n\n## What I learned\n\nThe takeaway. What surprised me, what I didn't know before.\n\n## Resources\n\n- [Link 1](url)\n- [Link 2](url)" }
       ];
 
       CMS.init({
