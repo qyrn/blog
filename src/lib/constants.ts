@@ -5,6 +5,7 @@ export const POST_TYPES: { value: PostType; label: string }[] = [
   { value: "tutorial", label: "Tutoriel" },
   { value: "journal", label: "Journal" },
   { value: "watch", label: "Veille" },
+  { value: "incident", label: "Incident" },
 ];
 
 export const CATEGORIES: { value: Category; label: string }[] = [
@@ -34,6 +35,7 @@ export const TYPE_STYLES: Record<PostType, string> = {
   tutorial: "bg-blue/20 border-blue text-blue",
   journal: "bg-fuchsia/20 border-fuchsia text-fuchsia",
   watch: "bg-cyan/20 border-cyan text-cyan",
+  incident: "bg-red/20 border-red text-red",
 };
 
 export const CATEGORY_STYLES: Record<Category, string> = {
