@@ -15,7 +15,7 @@ export default function Header() {
           href="/"
           className="text-lg font-bold font-[family-name:var(--font-space-grotesk)] text-accent glitch-hover"
         >
-          Qyrn.sh
+          qyrn.sh
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">

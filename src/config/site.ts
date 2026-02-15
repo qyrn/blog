@@ -1,9 +1,9 @@
 export const siteConfig = {
-  name: "Qyrn.sh",
+  name: "qyrn.sh",
   description: "Blog cybersécurité - Writeups, tutoriels et veille technique",
   url: "https://blog.qyrn.dev",
   author: {
-    name: "Qyrn",
+    name: "qyrn",
     email: "contact@qyrn.dev",
     github: "https://github.com/qyrn",
     linkedin: "https://www.linkedin.com/in/qyrn/",
