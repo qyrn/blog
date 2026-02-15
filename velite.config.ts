@@ -24,7 +24,7 @@ export default defineConfig({
           date: s.isodate(),
           lang: s.enum(["fr", "en"]),
           translationSlug: s.string().optional(),
-          type: s.enum(["writeup", "tutorial", "journal", "watch"]),
+          type: s.enum(["writeup", "tutorial", "journal", "watch", "incident"]),
           category: s.enum([
             "Web",
             "Network",

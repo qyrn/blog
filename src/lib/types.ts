@@ -1,4 +1,4 @@
-export type PostType = "writeup" | "tutorial" | "journal" | "watch";
+export type PostType = "writeup" | "tutorial" | "journal" | "watch" | "incident";
 
 export type Category =
   | "Web"
