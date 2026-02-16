@@ -44,7 +44,7 @@ export default function Home() {
 
   const socials = [
     { icon: Github, label: "GitHub", href: siteConfig.author.github },
-    { icon: Linkedin, label: "LinkedIn", href: siteConfig.author.linkedin },
+    { icon: Linkedin, label: "LinkedIn", href: siteConfig.author.linkedin, disabled: true },
     { icon: Terminal, label: "HTB", href: siteConfig.author.hackthebox },
     { icon: Target, label: "THM", href: siteConfig.author.tryhackme },
   ];
@@ -67,18 +67,28 @@ export default function Home() {
         </p>
 
         <div className="flex flex-wrap justify-center gap-2 mb-8">
-          {socials.map((social) => (
-            <a
-              key={social.label}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-card px-3 py-1.5 text-xs text-text-dim transition-all hover:border-accent/50 hover:text-accent"
-            >
-              <social.icon className="h-3.5 w-3.5" />
-              {social.label}
-            </a>
-          ))}
+          {socials.map((social) =>
+            social.disabled ? (
+              <span
+                key={social.label}
+                className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-card px-3 py-1.5 text-xs text-text-faint opacity-50 cursor-not-allowed"
+              >
+                <social.icon className="h-3.5 w-3.5" />
+                {social.label}
+              </span>
+            ) : (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-card px-3 py-1.5 text-xs text-text-dim transition-all hover:border-accent/50 hover:text-accent"
+              >
+                <social.icon className="h-3.5 w-3.5" />
+                {social.label}
+              </a>
+            )
+          )}
         </div>
 
         <div className="flex gap-4">

@@ -7,7 +7,7 @@ export const siteConfig = {
     email: "contact@qyrn.dev",
     github: "https://github.com/qyrn",
     linkedin: "https://www.linkedin.com/in/qyrn/",
-    hackthebox: "https://app.hackthebox.com/profile/019c5e2f-2184-7309-a6af-ff74d06aa636",
+    hackthebox: "https://profile.hackthebox.com/profile/019c5e2f-2184-7309-a6af-ff74d06aa636",
     tryhackme: "https://tryhackme.com/p/qyrn",
   },
   portfolio: {

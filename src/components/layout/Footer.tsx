@@ -29,22 +29,10 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-6 pt-4 border-t border-border flex justify-between items-center">
+        <div className="mt-6 pt-4 border-t border-border flex justify-center items-center">
           <span className="text-[10px] text-text-faint tracking-widest uppercase">
             {new Date().getFullYear()} {siteConfig.name}
           </span>
-          <div className="flex gap-4">
-            {siteConfig.author.github && (
-              <a
-                href={`https://github.com/${siteConfig.author.github}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-text-faint hover:text-accent transition-colors text-xs"
-              >
-                GitHub
-              </a>
-            )}
-          </div>
         </div>
       </div>
     </footer>
