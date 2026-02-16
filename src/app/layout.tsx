@@ -33,6 +33,18 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_FR",
     siteName: "qyrn.sh",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "qyrn.sh - Blog cybersécurité",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/opengraph-image.png"],
   },
 };
 
