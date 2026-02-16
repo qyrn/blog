@@ -6,7 +6,6 @@ import {
   Linkedin,
   Mail,
   ExternalLink,
-  Shield,
   Terminal,
   BookOpen,
   Target,
@@ -17,36 +16,20 @@ export const metadata: Metadata = {
   description: "À propos de l'auteur du blog",
 };
 
-const skills = [
-  { name: "Pentesting", level: "Hard" },
-  { name: "OSINT", level: "Hard" },
-  { name: "Network Security", level: "Medium" },
-  { name: "Web Security", level: "Hard" },
-  { name: "Reverse Engineering", level: "Medium" },
-  { name: "Forensics", level: "Medium" },
-  { name: "Linux Administration", level: "Hard" },
-  { name: "Python / Scripting", level: "Hard" },
-];
-
 const certifications = [
   { name: "Certification en cours...", status: "wip" },
 ];
 
 const socials = [
   {
+    icon: Mail,
+    label: "Email",
+    href: `mailto:${siteConfig.author.email}`,
+  },
+  {
     icon: Github,
     label: "GitHub",
     href: siteConfig.author.github,
-  },
-  {
-    icon: Linkedin,
-    label: "LinkedIn",
-    href: siteConfig.author.linkedin,
-  },
-  {
-    icon: Mail,
-    label: "Email",
-    href: siteConfig.author.email ? `mailto:${siteConfig.author.email}` : "",
   },
   {
     icon: Terminal,
@@ -57,6 +40,12 @@ const socials = [
     icon: Target,
     label: "TryHackMe",
     href: siteConfig.author.tryhackme,
+  },
+  {
+    icon: Linkedin,
+    label: "LinkedIn",
+    href: siteConfig.author.linkedin,
+    disabled: true,
   },
 ];
 
@@ -88,32 +77,6 @@ export default function AboutPage() {
             Actif sur Hack The Box et autres plateformes CTF. Je m'intéresse
             particulièrement au pentesting web, à l'OSINT et à la sécurité réseau.
           </p>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <div className="flex items-center gap-2 text-text">
-          <Shield className="h-4 w-4 text-accent" />
-          <h2 className="text-base font-semibold font-[family-name:var(--font-space-grotesk)]">
-            Compétences
-          </h2>
-        </div>
-        <div className="grid gap-2 sm:grid-cols-2">
-          {skills.map((skill) => (
-            <div
-              key={skill.name}
-              className="flex items-center justify-between rounded-lg border border-border bg-bg-card px-4 py-2.5"
-            >
-              <span className="text-sm text-text">{skill.name}</span>
-              <span className={`text-xs px-2 py-0.5 rounded border ${
-                skill.level === "Hard"
-                  ? "border-green/30 text-green bg-green/5"
-                  : "border-orange/30 text-orange bg-orange/5"
-              }`}>
-                {skill.level}
-              </span>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -175,21 +138,31 @@ export default function AboutPage() {
         <h2 className="text-base font-semibold font-[family-name:var(--font-space-grotesk)] text-text">
           Contact
         </h2>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {socials
             .filter((s) => s.href)
-            .map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-4 py-2.5 text-sm text-text-dim transition-all hover:border-accent/50 hover:text-accent"
-              >
-                <social.icon className="h-4 w-4" />
-                {social.label}
-              </a>
-            ))}
+            .map((social) =>
+              social.disabled ? (
+                <span
+                  key={social.label}
+                  className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-4 py-2.5 text-sm text-text-faint opacity-50 cursor-not-allowed"
+                >
+                  <social.icon className="h-4 w-4" />
+                  {social.label}
+                </span>
+              ) : (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-4 py-2.5 text-sm text-text-dim transition-all hover:border-accent/50 hover:text-accent"
+                >
+                  <social.icon className="h-4 w-4" />
+                  {social.label}
+                </a>
+              )
+            )}
         </div>
       </section>
     </div>
