@@ -1,5 +1,5 @@
 import type { Post } from "#site/content";
-import type { PostType, Category, Difficulty, Lang } from "./types";
+import type { PostType, Category, Difficulty } from "./types";
 
 export function getPublishedPosts(posts: Post[]): Post[] {
   return posts
@@ -25,7 +25,6 @@ export function filterPosts(
     types?: PostType[];
     categories?: Category[];
     difficulties?: Difficulty[];
-    langs?: Lang[];
     search?: string;
     tag?: string;
   }
@@ -36,7 +35,6 @@ export function filterPosts(
       return false;
     if (filters.difficulties?.length && !filters.difficulties.includes(post.difficulty as Difficulty))
       return false;
-    if (filters.langs?.length && !filters.langs.includes(post.lang as Lang)) return false;
     if (filters.tag && !post.tags.includes(filters.tag)) return false;
     if (filters.search) {
       const q = filters.search.toLowerCase();
@@ -56,9 +54,7 @@ export function getPostBySlug(posts: Post[], slug: string): Post | undefined {
 
 export function getTranslation(posts: Post[], post: Post): Post | undefined {
   if (!post.translationSlug) return undefined;
-  return posts.find(
-    (p) => p.translationSlug === post.translationSlug && p.lang !== post.lang && p.published
-  );
+  return posts.find((p) => p.slug === post.translationSlug && p.published);
 }
 
 export function getAllTags(posts: Post[]): { tag: string; count: number }[] {
