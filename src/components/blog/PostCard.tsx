@@ -34,40 +34,37 @@ export default function PostCard({
   return (
     <Link
       href={`/blog/${slug}`}
-      className="block p-5 bg-bg-card border border-border rounded-lg transition-all hover:border-border-hover hover:bg-bg-hover hover:-translate-y-0.5 group"
+      className="group block p-5 bg-bg-card border border-border border-l-2 border-l-border rounded-lg transition-all hover:border-l-accent hover:border-border-hover hover:bg-bg-hover"
     >
-      <div className="flex items-center gap-2 mb-3 flex-wrap">
+      <div className="flex items-center gap-2 mb-3">
         <span className={`text-[10px] px-2 py-0.5 rounded border ${typeStyle}`}>
           {type}
         </span>
         <span className={`text-[10px] px-2 py-0.5 rounded border ${diffStyle}`}>
           {difficulty}
         </span>
-        <span className="text-[10px] text-text-faint uppercase">{category}</span>
         {platform && (
-          <span className="text-[10px] text-text-faint">/ {platform}</span>
+          <span className="text-[10px] text-text-faint ml-auto">{platform}</span>
         )}
-        <span className="text-[10px] text-text-faint ml-auto">{lang.toUpperCase()}</span>
       </div>
 
-      <h3 className="text-sm font-semibold font-[family-name:var(--font-space-grotesk)] text-text group-hover:text-accent transition-colors mb-2">
+      <h3 className="text-sm font-semibold font-[family-name:var(--font-space-grotesk)] text-text group-hover:text-accent transition-colors mb-2 leading-snug">
         {title}
       </h3>
 
-      <p className="text-xs text-text-dim line-clamp-2 mb-3">{excerpt}</p>
+      <p className="text-xs text-text-dim line-clamp-2 mb-4 leading-relaxed">{excerpt}</p>
 
       <div className="flex items-center justify-between">
-        <div className="flex gap-1.5 flex-wrap">
-          {tags.slice(0, 4).map((tag) => (
-            <span
-              key={tag}
-              className="text-[10px] text-text-faint"
-            >
+        <div className="flex gap-2 flex-wrap">
+          {tags.slice(0, 3).map((tag) => (
+            <span key={tag} className="text-[10px] text-text-faint font-mono">
               #{tag}
             </span>
           ))}
         </div>
-        <span className="text-[10px] text-text-faint">{formatDate(date, lang)}</span>
+        <span className="text-[10px] text-text-faint font-mono shrink-0 ml-2">
+          {formatDate(date, lang)}
+        </span>
       </div>
     </Link>
   );
