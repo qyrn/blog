@@ -1,0 +1,74 @@
+---
+title: "The file named - that froze my terminal"
+slug: "bandit-dash"
+date: 2026-02-24
+lang: en
+translationSlug: "bandit-tiret"
+type: journal
+category: Misc
+difficulty: Easy
+tags: ["linux", "shell", "bandit", "overthewire", "beginner"]
+platform: "OverTheWire"
+excerpt: "My first real beginner bug on Bandit — and what a file named `-` taught me about how the shell actually works."
+published: true
+---
+
+## Context
+
+First week, first real challenge. I'm doing Bandit on OverTheWire — a series of introductory Linux shell levels. Level 1 → 2 is supposed to be trivial: SSH in, read a file, grab the password.
+
+The file is named `-`.
+
+I type `cat -`. The terminal freezes. Nothing happens. No error, no output. Just a blinking cursor waiting for something.
+
+I spent a few minutes thinking my SSH connection had dropped.
+
+## What I did
+
+Here's exactly what happened:
+
+```bash
+bandit1@bandit:~$ ls
+-
+bandit1@bandit:~$ cat -
+```
+
+The terminal starts waiting for keyboard input. `cat -` is a Unix convention: `-` means "read from standard input (stdin)", not from a file. The command is waiting for me to type something.
+
+The fix: force `-` to be interpreted as a file path by prepending `./`.
+
+```bash
+bandit1@bandit:~$ cat ./-
+[password retrieved]
+```
+
+It also works with input redirection:
+
+```bash
+bandit1@bandit:~$ cat < -
+[password retrieved]
+```
+
+Or with `--` to signal the end of options:
+
+```bash
+bandit1@bandit:~$ cat -- -
+[password retrieved]
+```
+
+## What I learned
+
+**The shell interprets arguments before passing them to the command.**
+
+When I type `cat -`, the shell doesn't hand the character `-` to `cat` as a filename. It follows a POSIX convention: `-` as an argument means stdin. No error, no warning — that's the expected behaviour.
+
+By adding `./`, I pass a path (`./` = current directory), and there's nothing left for the shell to interpret — it's unambiguously a file.
+
+In development, nobody ever creates files named `-` or starting with `--`. In security, these are exactly the kinds of edge cases that can trip up a poorly written script or reveal how a system handles inputs.
+
+First level, first lesson: never assume an argument will be treated as a filename.
+
+## Resources
+
+- [OverTheWire – Bandit Level 1](https://overthewire.org/wargames/bandit/bandit2.html)
+- [POSIX — stdin convention with `-`](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html)

@@ -1,0 +1,74 @@
+---
+title: "Le fichier nommé - qui a figé mon terminal"
+slug: "bandit-tiret"
+date: 2026-02-24
+lang: fr
+translationSlug: "bandit-dash"
+type: journal
+category: Misc
+difficulty: Easy
+tags: ["linux", "shell", "bandit", "overthewire", "débutant"]
+platform: "OverTheWire"
+excerpt: "Mon premier vrai bug de débutant sur Bandit — et ce qu'un fichier nommé `-` m'a appris sur le fonctionnement du shell."
+published: true
+---
+
+## Contexte
+
+Première semaine, premier challenge sérieux. Je fais Bandit sur OverTheWire — une série de niveaux d'introduction au shell Linux. Le niveau 1 → 2 est censé être trivial : se connecter en SSH, lire un fichier, récupérer le mot de passe.
+
+Le fichier s'appelle `-`.
+
+Je tape `cat -`. Le terminal se fige. Plus rien. Aucune erreur, aucune sortie. Juste un curseur qui clignote et attend.
+
+J'ai passé plusieurs minutes à penser que ma connexion SSH avait un problème.
+
+## Ce que j'ai fait
+
+Voilà exactement ce qui s'est passé :
+
+```bash
+bandit1@bandit:~$ ls
+-
+bandit1@bandit:~$ cat -
+```
+
+Le terminal entre en attente d'input clavier. `cat -` est une convention Unix : `-` signifie "lis depuis l'entrée standard (stdin)", pas depuis un fichier. La commande attend que je tape quelque chose au clavier.
+
+La solution : forcer l'interprétation du `-` comme un chemin de fichier en ajoutant `./` devant.
+
+```bash
+bandit1@bandit:~$ cat ./-
+[mot de passe récupéré]
+```
+
+Ça fonctionne aussi avec la redirection :
+
+```bash
+bandit1@bandit:~$ cat < -
+[mot de passe récupéré]
+```
+
+Ou encore avec `--` pour signaler la fin des options :
+
+```bash
+bandit1@bandit:~$ cat -- -
+[mot de passe récupéré]
+```
+
+## Ce que j'ai appris
+
+**Le shell interprète les arguments avant de les passer à la commande.**
+
+Quand je tape `cat -`, le shell ne passe pas le caractère `-` à `cat` comme nom de fichier. Il suit une convention POSIX : `-` en argument = stdin. Aucune erreur, aucun avertissement, c'est le comportement attendu.
+
+En ajoutant `./`, je passe un chemin (`./` = répertoire courant), et le shell n'a plus rien à interpréter — c'est clairement un fichier.
+
+En développement, on ne crée jamais de fichiers nommés `-` ou qui commencent par `--`. En sécurité, c'est exactement le genre de cas limite qui peut piéger un script mal écrit ou révéler comment un système traite les inputs.
+
+Premier niveau, première leçon : ne jamais supposer qu'un argument sera interprété comme un nom de fichier.
+
+## Ressources
+
+- [OverTheWire – Bandit Level 1](https://overthewire.org/wargames/bandit/bandit2.html)
+- [POSIX — convention stdin avec `-`](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html)
