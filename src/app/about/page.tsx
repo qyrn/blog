@@ -12,12 +12,12 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "À propos",
-  description: "À propos de l'auteur du blog",
+  title: "About",
+  description: "About the author",
 };
 
 const certifications = [
-  { name: "Certification en cours...", status: "wip" },
+  { name: "Certification in progress...", status: "wip" },
 ];
 
 const socials = [
@@ -57,7 +57,7 @@ export default function AboutPage() {
           /about
         </h1>
         <p className="text-sm text-text-dim">
-          Passionné de cybersécurité, CTF player et créateur de contenu technique.
+          Cybersecurity enthusiast, CTF player and technical content creator.
         </p>
       </section>
 
@@ -70,12 +70,12 @@ export default function AboutPage() {
         </div>
         <div className="rounded-lg border border-border bg-bg-card p-5 text-sm text-text-dim leading-relaxed space-y-3">
           <p>
-            Je documente mon apprentissage en cybersécurité à travers des writeups de machines,
-            des tutoriels et de la veille technique. Ce blog est mon carnet de bord.
+            I document my cybersecurity learning through machine writeups,
+            tutorials and technical notes. This blog is my logbook.
           </p>
           <p>
-            Actif sur Hack The Box et autres plateformes CTF. Je m'intéresse
-            particulièrement au pentesting web, à l'OSINT et à la sécurité réseau.
+            Active on Hack The Box and other CTF platforms. Particularly interested
+            in web pentesting, OSINT and network security.
           </p>
         </div>
       </section>
@@ -96,7 +96,7 @@ export default function AboutPage() {
               <span className="text-sm text-text-dim">{cert.name}</span>
               {cert.status === "wip" && (
                 <span className="text-[10px] px-2 py-0.5 rounded border border-yellow/30 text-yellow bg-yellow/5">
-                  En cours
+                  In progress
                 </span>
               )}
             </div>
@@ -108,7 +108,7 @@ export default function AboutPage() {
         <div className="flex items-center gap-2 text-text">
           <Target className="h-4 w-4 text-accent" />
           <h2 className="text-base font-semibold font-[family-name:var(--font-space-grotesk)]">
-            Projets
+            Projects
           </h2>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">

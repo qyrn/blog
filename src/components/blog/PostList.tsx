@@ -46,7 +46,7 @@ export default function PostList({ posts }: { posts: PostData[] }) {
 
       {filtered.length === 0 ? (
         <div className="text-center py-16 text-text-dim text-sm">
-          Aucun article ne correspond aux filtres.
+          No articles match your filters.
         </div>
       ) : (
         <div className="grid gap-3">
@@ -68,7 +68,7 @@ export default function PostList({ posts }: { posts: PostData[] }) {
         </div>
       )}
 
-      <div className="mt-4 text-[10px] text-text-faint text-right">
+      <div className="mt-4 text-[10px] text-text-faint text-right font-mono">
         {filtered.length} article{filtered.length !== 1 ? "s" : ""}
       </div>
     </div>

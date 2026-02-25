@@ -41,7 +41,7 @@ export default function TableOfContents() {
   return (
     <nav className="hidden xl:block sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
       <p className="text-[10px] text-text-faint uppercase tracking-widest mb-3">
-        Sommaire
+        On this page
       </p>
       <ul className="space-y-1.5">
         {headings.map((h) => (

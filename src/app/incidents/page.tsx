@@ -5,7 +5,7 @@ import PostList from "@/components/blog/PostList";
 
 export const metadata: Metadata = {
   title: "Incidents",
-  description: "Rapports d'incidents - Analyses Blue Team et retours d'expérience.",
+  description: "Incident reports — Blue Team analysis and post-mortems.",
 };
 
 export default function IncidentsPage() {
@@ -19,7 +19,7 @@ export default function IncidentsPage() {
           /incidents
         </h1>
         <p className="text-sm text-text-dim">
-          Mini rapports d'incident et analyses Blue Team.
+          Mini incident reports and Blue Team analysis.
         </p>
       </div>
 

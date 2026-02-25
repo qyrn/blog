@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     default: "qyrn.sh",
     template: "%s | qyrn.sh",
   },
-  description: "Blog cybersécurité - Writeups, tutoriels et veille technique",
+  description: "Cybersecurity blog — writeups, tutorials and technical notes",
   icons: { icon: "/favicon.ico" },
   metadataBase: new URL("https://blog.qyrn.dev"),
   alternates: {
@@ -30,14 +30,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "fr_FR",
+    locale: "en_US",
     siteName: "qyrn.sh",
     images: [
       {
         url: "/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "qyrn.sh - Blog cybersécurité",
+        alt: "qyrn.sh - Cybersecurity blog",
       },
     ],
   },
@@ -53,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" className={`dark ${spaceGrotesk.variable} ${firaCode.variable}`}>
+    <html lang="en" className={`dark ${spaceGrotesk.variable} ${firaCode.variable}`}>
       <body className="min-h-screen flex flex-col">
         <div className="scanline" />
         <div className="glow-tl" />

@@ -30,41 +30,45 @@ export default function PostHeader({
   const diffStyle = DIFFICULTY_STYLES[difficulty as Difficulty] || "border-border text-text-dim";
 
   return (
-    <header className="mb-8 pb-6 border-b border-border">
-      <div className="flex items-center gap-2 mb-4 flex-wrap">
+    <header className="mb-10 pb-8 border-b border-border">
+      <div className="flex items-center gap-2 mb-5 flex-wrap">
         <span className={`text-[10px] px-2 py-0.5 rounded border ${typeStyle}`}>
           {type}
         </span>
         <span className={`text-[10px] px-2 py-0.5 rounded border ${diffStyle}`}>
           {difficulty}
         </span>
-        <span className="text-[10px] text-text-faint uppercase">{category}</span>
+        <span className="text-[10px] text-text-faint uppercase tracking-wide">{category}</span>
         {platform && (
           <span className="text-[10px] text-text-faint">/ {platform}</span>
         )}
       </div>
 
-      <h1 className="text-2xl md:text-3xl font-bold font-[family-name:var(--font-space-grotesk)] text-white mb-4">
+      <h1 className="text-2xl md:text-3xl font-bold font-[family-name:var(--font-space-grotesk)] text-white mb-5 leading-tight">
         {title}
       </h1>
 
-      <div className="flex items-center gap-4 text-xs text-text-dim">
+      <div className="flex items-center gap-3 text-[11px] text-text-faint font-mono">
         <time>{formatDate(date, lang)}</time>
+        <span className="text-border">·</span>
         <span>{readingTime(body)}</span>
+        <span className="text-border">·</span>
         <span className="uppercase">{lang}</span>
       </div>
 
-      <div className="flex gap-2 mt-3 flex-wrap">
-        {tags.map((tag) => (
-          <Link
-            key={tag}
-            href={`/tags/${tag}`}
-            className="text-[10px] text-text-faint hover:text-accent transition-colors"
-          >
-            #{tag}
-          </Link>
-        ))}
-      </div>
+      {tags.length > 0 && (
+        <div className="flex gap-2 mt-4 flex-wrap">
+          {tags.map((tag) => (
+            <Link
+              key={tag}
+              href={`/tags/${tag}`}
+              className="text-[10px] font-mono text-text-faint hover:text-accent transition-colors"
+            >
+              #{tag}
+            </Link>
+          ))}
+        </div>
+      )}
     </header>
   );
 }

@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const decoded = decodeURIComponent(tag);
   return {
     title: `#${decoded}`,
-    description: `Articles tagués "${decoded}"`,
+    description: `Articles tagged "${decoded}"`,
   };
 }
 
@@ -38,13 +38,13 @@ export default async function TagPage({ params }: Props) {
           className="inline-flex items-center gap-1.5 text-xs text-text-dim hover:text-accent transition-colors mb-4"
         >
           <ArrowLeft className="h-3 w-3" />
-          Tous les tags
+          All tags
         </Link>
         <h1 className="text-2xl font-bold font-[family-name:var(--font-space-grotesk)] text-accent">
           #{decoded}
         </h1>
         <p className="text-sm text-text-dim mt-1">
-          {filtered.length} article{filtered.length > 1 ? "s" : ""}
+          {filtered.length} article{filtered.length !== 1 ? "s" : ""}
         </p>
       </div>
 

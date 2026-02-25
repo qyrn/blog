@@ -4,8 +4,8 @@ import { getPublishedPosts, filterPosts } from "@/lib/posts";
 import PostList from "@/components/blog/PostList";
 
 export const metadata: Metadata = {
-  title: "Veille",
-  description: "Veille cybersécurité hebdomadaire - Échelon Digest et actualités du secteur.",
+  title: "Intel",
+  description: "Weekly cybersecurity intel — Échelon digests and industry news.",
 };
 
 export default function VeillePage() {
@@ -16,10 +16,10 @@ export default function VeillePage() {
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold font-[family-name:var(--font-space-grotesk)] text-white mb-2">
-          /veille
+          /intel
         </h1>
         <p className="text-sm text-text-dim">
-          Digests hebdomadaires et veille cybersécurité.
+          Weekly digests and cybersecurity intelligence.
         </p>
       </div>
 

@@ -5,7 +5,7 @@ import PostList from "@/components/blog/PostList";
 
 export const metadata: Metadata = {
   title: "Writeups",
-  description: "Writeups de machines CTF - Hack The Box, TryHackMe, Root Me et autres challenges.",
+  description: "CTF machine writeups — Hack The Box, TryHackMe, Root Me and other challenges.",
 };
 
 export default function WriteupsPage() {
@@ -19,7 +19,7 @@ export default function WriteupsPage() {
           /writeups
         </h1>
         <p className="text-sm text-text-dim">
-          Writeups de machines CTF — HTB, THM, Root Me.
+          CTF machine writeups — HTB, THM, Root Me.
         </p>
       </div>
 

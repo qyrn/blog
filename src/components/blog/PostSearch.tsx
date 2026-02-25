@@ -23,7 +23,7 @@ export default function PostSearch({
       </svg>
       <input
         type="text"
-        placeholder="Rechercher..."
+        placeholder="Search..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full pl-9 pr-4 py-2.5 bg-bg-card border border-border rounded-lg text-sm text-text placeholder:text-text-faint focus:border-accent/40 focus:outline-none transition-colors"

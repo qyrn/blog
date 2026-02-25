@@ -5,7 +5,7 @@ import PostList from "@/components/blog/PostList";
 
 export const metadata: Metadata = {
   title: "Tutorials",
-  description: "Tutoriels cybersécurité - Guides pratiques et formations techniques.",
+  description: "Cybersecurity tutorials — practical guides and technical training.",
 };
 
 export default function TutorialsPage() {
@@ -19,7 +19,7 @@ export default function TutorialsPage() {
           /tutorials
         </h1>
         <p className="text-sm text-text-dim">
-          Guides pratiques et tutoriels techniques.
+          Practical guides and technical tutorials.
         </p>
       </div>
 

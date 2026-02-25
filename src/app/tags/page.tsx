@@ -6,7 +6,7 @@ import { Tag } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Tags",
-  description: "Tous les tags du blog",
+  description: "All blog tags",
 };
 
 export default function TagsPage() {
@@ -20,7 +20,7 @@ export default function TagsPage() {
           /tags
         </h1>
         <p className="text-sm text-text-dim">
-          {tags.length} tags, {published.length} articles
+          {tags.length} tags, {published.length} article{published.length !== 1 ? "s" : ""}
         </p>
       </div>
 

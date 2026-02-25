@@ -2,9 +2,9 @@ import type { PostType, Category, Difficulty, Lang } from "./types";
 
 export const POST_TYPES: { value: PostType; label: string }[] = [
   { value: "writeup", label: "Writeup" },
-  { value: "tutorial", label: "Tutoriel" },
+  { value: "tutorial", label: "Tutorial" },
   { value: "journal", label: "Journal" },
-  { value: "watch", label: "Veille" },
+  { value: "watch", label: "Intel" },
   { value: "incident", label: "Incident" },
 ];
 

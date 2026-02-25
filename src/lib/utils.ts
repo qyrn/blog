@@ -1,4 +1,4 @@
-export function formatDate(date: string | Date, lang: string = "fr"): string {
+export function formatDate(date: string | Date, lang: string = "en"): string {
   return new Date(date).toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", {
     year: "numeric",
     month: "long",

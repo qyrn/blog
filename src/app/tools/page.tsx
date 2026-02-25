@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
-import { ExternalLink, Github, Rss, Database, Eye } from "lucide-react";
+import { ExternalLink, Github, Database, Eye } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Tools",
-  description: "Outils et projets personnels - Vault, Échelon et scripts.",
+  description: "Personal tools and projects — Vault, Échelon and scripts.",
 };
 
 const tools = [
@@ -14,7 +14,7 @@ const tools = [
     url: siteConfig.portfolio.vault.url,
     color: siteConfig.portfolio.vault.color,
     icon: Database,
-    features: ["Ressources curatées", "Liens utiles", "Documentation"],
+    features: ["Curated resources", "Useful links", "Documentation"],
   },
   {
     name: siteConfig.portfolio.echelon.name,
@@ -22,7 +22,7 @@ const tools = [
     url: siteConfig.portfolio.echelon.url,
     color: siteConfig.portfolio.echelon.color,
     icon: Eye,
-    features: ["Veille automatisée", "Digest hebdomadaire", "Flux RSS"],
+    features: ["Automated intel", "Weekly digest", "RSS feed"],
   },
 ];
 
@@ -34,7 +34,7 @@ export default function ToolsPage() {
           /tools
         </h1>
         <p className="text-sm text-text-dim">
-          Outils et projets personnels.
+          Personal tools and projects.
         </p>
       </div>
 
@@ -90,7 +90,7 @@ export default function ToolsPage() {
           </h2>
         </div>
         <p className="text-sm text-text-dim mb-4">
-          Retrouve mes scripts et contributions sur GitHub.
+          Find my scripts and contributions on GitHub.
         </p>
         <a
           href={siteConfig.author.github}
