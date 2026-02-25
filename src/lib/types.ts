@@ -18,6 +18,5 @@ export interface PostFilterState {
   types: PostType[];
   categories: Category[];
   difficulties: Difficulty[];
-  langs: Lang[];
   search: string;
 }

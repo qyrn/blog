@@ -27,7 +27,6 @@ export default function PostList({ posts }: { posts: PostData[] }) {
     types: [],
     categories: [],
     difficulties: [],
-    langs: [],
     search: "",
   });
 
