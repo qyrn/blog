@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "qyrn://blog",
-  description: "Blog cybersécurité - Writeups, tutoriels et veille technique",
+  description: "Cybersecurity blog — writeups, tutorials and technical notes",
   url: "https://blog.qyrn.dev",
   author: {
     name: "qyrn",
@@ -14,16 +14,16 @@ export const siteConfig = {
     vault: {
       name: "Vault",
       url: "https://vault.qyrn.dev",
-      description: "Hub de ressources cybersécurité",
+      description: "Cybersecurity resource hub",
       color: "#00ff88",
     },
     echelon: {
       name: "Échelon",
       url: "https://echelon.qyrn.dev",
-      description: "Veille cybersec hebdomadaire",
+      description: "Weekly cybersec intel",
       color: "#00ffc8",
     },
   },
   ogImage: "/og.png",
-  locale: "fr-FR",
+  locale: "en-US",
 };

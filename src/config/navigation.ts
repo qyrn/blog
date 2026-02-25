@@ -1,17 +1,8 @@
 import { siteConfig } from "./site";
 
 export const mainNav = [
-  { label: "Writeups", href: "/writeups" },
-  { label: "Veille", href: "/veille" },
-  { label: "Tutorials", href: "/tutorials" },
-  { label: "Tools", href: "/tools" },
-  { label: "À propos", href: "/about" },
-];
-
-export const secondaryNav = [
   { label: "Blog", href: "/blog" },
-  { label: "Incidents", href: "/incidents" },
-  { label: "Tags", href: "/tags" },
+  { label: "About", href: "/about" },
 ];
 
 export const portfolioNav = [
