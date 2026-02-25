@@ -17,8 +17,8 @@ const firaCode = Fira_Code({
 
 export const metadata: Metadata = {
   title: {
-    default: "qyrn.sh",
-    template: "%s | qyrn.sh",
+    default: "qyrn://blog",
+    template: "%s | qyrn://blog",
   },
   description: "Cybersecurity blog — writeups, tutorials and technical notes",
   icons: { icon: "/favicon.ico" },
@@ -31,13 +31,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "qyrn.sh",
+    siteName: "qyrn://blog",
     images: [
       {
         url: "/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "qyrn.sh - Cybersecurity blog",
+        alt: "qyrn://blog - Cybersecurity blog",
       },
     ],
   },
