@@ -9,13 +9,13 @@ category: Misc
 difficulty: Easy
 tags: ["linux", "shell", "bandit", "overthewire", "beginner"]
 platform: "OverTheWire"
-excerpt: "My first real beginner bug on Bandit — and what a file named `-` taught me about how the shell actually works."
+excerpt: "My first real stumble on Bandit. What a file named `-` taught me about how the shell actually works."
 published: true
 ---
 
 ## Context
 
-First week, first real challenge. I'm doing Bandit on OverTheWire — a series of introductory Linux shell levels. Level 1 → 2 is supposed to be trivial: SSH in, read a file, grab the password.
+First week, first real challenge. I'm doing Bandit on OverTheWire, a series of Linux shell levels starting from zero. Level 1 → 2 should have taken 30 seconds: SSH in, read a file, grab the password.
 
 The file is named `-`.
 
@@ -35,7 +35,7 @@ bandit1@bandit:~$ cat -
 
 The terminal starts waiting for keyboard input. `cat -` is a Unix convention: `-` means "read from standard input (stdin)", not from a file. The command is waiting for me to type something.
 
-The fix: force `-` to be interpreted as a file path by prepending `./`.
+The fix: add `./` in front so `-` is treated as a file path, not stdin.
 
 ```bash
 bandit1@bandit:~$ cat ./-
@@ -60,15 +60,15 @@ bandit1@bandit:~$ cat -- -
 
 **The shell interprets arguments before passing them to the command.**
 
-When I type `cat -`, the shell doesn't hand the character `-` to `cat` as a filename. It follows a POSIX convention: `-` as an argument means stdin. No error, no warning — that's the expected behaviour.
+When I type `cat -`, the shell doesn't hand the character `-` to `cat` as a filename. It follows a POSIX convention: `-` as an argument means stdin. No error, no warning. That's just the expected behaviour.
 
-By adding `./`, I pass a path (`./` = current directory), and there's nothing left for the shell to interpret — it's unambiguously a file.
+By adding `./`, I'm giving the shell a path (`./` = current directory), so it has nothing to interpret. It's clearly a file.
 
-In development, nobody ever creates files named `-` or starting with `--`. In security, these are exactly the kinds of edge cases that can trip up a poorly written script or reveal how a system handles inputs.
+In regular development, nobody really names files `-` or starting with `--`. In security, these are the exact edge cases that can trip up a poorly written script or show how a system really handles its inputs.
 
 First level, first lesson: never assume an argument will be treated as a filename.
 
 ## Resources
 
 - [OverTheWire – Bandit Level 1](https://overthewire.org/wargames/bandit/bandit2.html)
-- [POSIX — stdin convention with `-`](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html)
+- [POSIX – stdin convention with `-`](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html)
