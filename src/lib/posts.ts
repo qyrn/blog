@@ -7,6 +7,18 @@ export function getPublishedPosts(posts: Post[]): Post[] {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
+export function getDeduplicatedPosts(posts: Post[]): Post[] {
+  const enSlugs = new Set(
+    posts.filter((p) => p.lang === "en").map((p) => p.slug)
+  );
+  return posts.filter((p) => {
+    if (p.lang === "fr" && p.translationSlug && enSlugs.has(p.translationSlug)) {
+      return false;
+    }
+    return true;
+  });
+}
+
 export function filterPosts(
   posts: Post[],
   filters: {
