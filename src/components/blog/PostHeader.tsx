@@ -2,6 +2,7 @@ import { formatDate, readingTime } from "@/lib/utils";
 import { TYPE_STYLES, DIFFICULTY_STYLES } from "@/lib/constants";
 import type { PostType, Difficulty } from "@/lib/types";
 import Link from "next/link";
+import { Globe } from "lucide-react";
 
 interface PostHeaderProps {
   title: string;
@@ -13,6 +14,7 @@ interface PostHeaderProps {
   tags: string[];
   platform?: string;
   body: string;
+  onToggle?: () => void;
 }
 
 export default function PostHeader({
@@ -25,6 +27,7 @@ export default function PostHeader({
   tags,
   platform,
   body,
+  onToggle,
 }: PostHeaderProps) {
   const typeStyle = TYPE_STYLES[type as PostType] || "border-border text-text-dim";
   const diffStyle = DIFFICULTY_STYLES[difficulty as Difficulty] || "border-border text-text-dim";
@@ -48,12 +51,24 @@ export default function PostHeader({
         {title}
       </h1>
 
-      <div className="flex items-center gap-3 text-[11px] text-text-faint font-mono">
+      <div className="flex items-center gap-3 text-[11px] text-text-faint font-mono flex-wrap">
         <time>{formatDate(date, lang)}</time>
         <span className="text-border">·</span>
         <span>{readingTime(body)}</span>
         <span className="text-border">·</span>
         <span className="uppercase">{lang}</span>
+        {onToggle && (
+          <>
+            <span className="text-border">·</span>
+            <button
+              onClick={onToggle}
+              className="inline-flex items-center gap-1.5 text-text-faint hover:text-accent transition-colors cursor-pointer"
+            >
+              <Globe className="h-3 w-3" />
+              Read in {lang === "en" ? "FR" : "EN"}
+            </button>
+          </>
+        )}
       </div>
 
       {tags.length > 0 && (

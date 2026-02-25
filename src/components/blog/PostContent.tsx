@@ -3,7 +3,6 @@
 import { useState } from "react";
 import PostHeader from "./PostHeader";
 import PostBody from "./PostBody";
-import LanguageSwitch from "./LanguageSwitch";
 import TableOfContents from "./TableOfContents";
 
 interface PostData {
@@ -29,21 +28,14 @@ export default function PostContent({
   const [lang, setLang] = useState(post.lang);
 
   const active = lang === post.lang ? post : translation!;
-  const other = lang === post.lang ? translation : post;
 
   function toggle() {
-    setLang((prev) => (prev === post.lang ? other!.lang : post.lang));
+    setLang((prev) => (prev === post.lang ? translation!.lang : post.lang));
   }
 
   return (
     <div className="flex gap-10">
       <article className="flex-1 min-w-0">
-        {translation && (
-          <div className="mb-5 flex justify-end">
-            <LanguageSwitch currentLang={active.lang} onToggle={toggle} />
-          </div>
-        )}
-
         <PostHeader
           title={active.title}
           date={active.date}
@@ -54,6 +46,7 @@ export default function PostContent({
           tags={active.tags}
           platform={active.platform}
           body={active.body}
+          onToggle={translation ? toggle : undefined}
         />
 
         <PostBody code={active.body} />
