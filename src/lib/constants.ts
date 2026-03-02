@@ -17,6 +17,7 @@ export const CATEGORIES: { value: Category; label: string }[] = [
   { value: "Crypto", label: "Crypto" },
   { value: "RE", label: "RE" },
   { value: "Misc", label: "Misc" },
+  { value: "App-Script", label: "App-Script" },
 ];
 
 export const DIFFICULTIES: { value: Difficulty; label: string; color: string }[] = [
@@ -47,6 +48,7 @@ export const CATEGORY_STYLES: Record<Category, string> = {
   Crypto: "bg-yellow/20 border-yellow text-yellow",
   RE: "bg-fuchsia/20 border-fuchsia text-fuchsia",
   Misc: "bg-purple/20 border-purple text-purple",
+  "App-Script": "bg-teal/20 border-teal text-teal",
 };
 
 export const DIFFICULTY_STYLES: Record<Difficulty, string> = {
