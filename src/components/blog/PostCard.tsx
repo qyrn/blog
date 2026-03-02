@@ -14,6 +14,7 @@ interface PostCardProps {
   tags: string[];
   excerpt: string;
   platform?: string;
+  readingTime?: number;
 }
 
 export default function PostCard({
@@ -27,6 +28,7 @@ export default function PostCard({
   tags,
   excerpt,
   platform,
+  readingTime,
 }: PostCardProps) {
   const typeStyle = TYPE_STYLES[type as PostType] || "border-border text-text-dim";
   const diffStyle = DIFFICULTY_STYLES[difficulty as Difficulty] || "border-border text-text-dim";
@@ -62,9 +64,16 @@ export default function PostCard({
             </span>
           ))}
         </div>
-        <span className="text-[10px] text-text-faint font-mono shrink-0 ml-2">
-          {formatDate(date, lang)}
-        </span>
+        <div className="flex items-center gap-2 shrink-0 ml-2">
+          {readingTime && (
+            <span className="text-[10px] text-text-faint font-mono">
+              {readingTime} min
+            </span>
+          )}
+          <span className="text-[10px] text-text-faint font-mono">
+            {formatDate(date, lang)}
+          </span>
+        </div>
       </div>
     </Link>
   );

@@ -62,6 +62,7 @@ export default async function TagPage({ params }: Props) {
             tags={post.tags}
             excerpt={post.excerpt}
             platform={post.platform}
+            readingTime={post.readingTime}
           />
         ))}
       </div>

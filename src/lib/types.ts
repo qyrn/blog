@@ -8,7 +8,8 @@ export type Category =
   | "Forensics"
   | "Crypto"
   | "RE"
-  | "Misc";
+  | "Misc"
+  | "App-Script";
 
 export type Difficulty = "Easy" | "Medium" | "Hard";
 

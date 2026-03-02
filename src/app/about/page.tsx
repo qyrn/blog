@@ -3,7 +3,6 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import {
   Github,
-  Linkedin,
   Mail,
   ExternalLink,
   Terminal,
@@ -40,12 +39,6 @@ const socials = [
     icon: Target,
     label: "TryHackMe",
     href: siteConfig.author.tryhackme,
-  },
-  {
-    icon: Linkedin,
-    label: "LinkedIn",
-    href: siteConfig.author.linkedin,
-    disabled: true,
   },
 ];
 
@@ -141,28 +134,18 @@ export default function AboutPage() {
         <div className="flex flex-wrap gap-3">
           {socials
             .filter((s) => s.href)
-            .map((social) =>
-              social.disabled ? (
-                <span
-                  key={social.label}
-                  className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-4 py-2.5 text-sm text-text-faint opacity-50 cursor-not-allowed"
-                >
-                  <social.icon className="h-4 w-4" />
-                  {social.label}
-                </span>
-              ) : (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-4 py-2.5 text-sm text-text-dim transition-all hover:border-accent/50 hover:text-accent"
-                >
-                  <social.icon className="h-4 w-4" />
-                  {social.label}
-                </a>
-              )
-            )}
+            .map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-4 py-2.5 text-sm text-text-dim transition-all hover:border-accent/50 hover:text-accent"
+              >
+                <social.icon className="h-4 w-4" />
+                {social.label}
+              </a>
+            ))}
         </div>
       </section>
     </div>

@@ -34,18 +34,26 @@ export default defineConfig({
             "Crypto",
             "RE",
             "Misc",
+            "App-Script",
           ]),
           difficulty: s.enum(["Easy", "Medium", "Hard"]),
           tags: s.array(s.string()),
           platform: s.string().optional(),
           excerpt: s.string().max(500),
           published: s.boolean().default(true),
+          raw: s.raw(),
           body: s.mdx(),
         })
-        .transform((data) => ({
-          ...data,
-          permalink: `/blog/${data.slug}`,
-        })),
+        .transform((data) => {
+          const { raw, ...rest } = data;
+          const wordCount = raw.split(/\s+/).filter(Boolean).length;
+          const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+          return {
+            ...rest,
+            permalink: `/blog/${data.slug}`,
+            readingTime,
+          };
+        }),
     },
   },
   mdx: {

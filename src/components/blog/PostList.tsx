@@ -18,6 +18,7 @@ interface PostData {
   tags: string[];
   excerpt: string;
   platform?: string;
+  readingTime?: number;
   published: boolean;
   translationSlug?: string;
 }
@@ -62,6 +63,7 @@ export default function PostList({ posts }: { posts: PostData[] }) {
               tags={post.tags}
               excerpt={post.excerpt}
               platform={post.platform}
+              readingTime={post.readingTime}
             />
           ))}
         </div>
