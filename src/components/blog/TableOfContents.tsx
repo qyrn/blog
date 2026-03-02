@@ -22,10 +22,9 @@ export default function TableOfContents() {
     setHeadings(items);
 
     const onScroll = () => {
-      const offset = 140;
       let current = "";
       for (const el of elements) {
-        if (el.getBoundingClientRect().top <= offset) {
+        if (el.getBoundingClientRect().top < window.innerHeight) {
           current = el.id;
         }
       }
