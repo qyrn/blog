@@ -13,27 +13,28 @@ export default function TableOfContents() {
   const [activeId, setActiveId] = useState("");
 
   useEffect(() => {
-    const elements = document.querySelectorAll(".prose h2, .prose h3");
-    const items: TocItem[] = Array.from(elements).map((el) => ({
+    const elements = Array.from(document.querySelectorAll(".prose h2, .prose h3"));
+    const items: TocItem[] = elements.map((el) => ({
       id: el.id,
       text: el.textContent || "",
       level: el.tagName === "H2" ? 2 : 3,
     }));
     setHeadings(items);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
+    const onScroll = () => {
+      const offset = 96;
+      let current = "";
+      for (const el of elements) {
+        if (el.getBoundingClientRect().top <= offset) {
+          current = el.id;
         }
-      },
-      { rootMargin: "-80px 0px -80% 0px" }
-    );
+      }
+      setActiveId(current);
+    };
 
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   if (headings.length === 0) return null;
