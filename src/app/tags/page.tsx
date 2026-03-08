@@ -16,7 +16,7 @@ export default function TagsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold font-[family-name:var(--font-space-grotesk)] text-accent mb-2">
+        <h1 className="text-2xl font-bold font-display text-accent mb-2">
           /tags
         </h1>
         <p className="text-sm text-text-dim">

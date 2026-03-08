@@ -13,7 +13,7 @@ export default function Header() {
       <div className="mx-auto max-w-5xl px-6 flex items-center justify-between h-14">
         <Link
           href="/"
-          className="text-lg font-bold font-[family-name:var(--font-space-grotesk)] text-accent glitch-hover"
+          className="text-lg font-bold font-display text-accent glitch-hover"
         >
           qyrn://blog
         </Link>

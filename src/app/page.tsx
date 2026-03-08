@@ -34,7 +34,7 @@ export default function Home() {
           <span>whoami</span>
         </div>
 
-        <h1 className="text-3xl font-bold font-[family-name:var(--font-space-grotesk)] text-accent glitch-hover mb-1">
+        <h1 className="text-3xl font-bold font-display text-accent glitch-hover mb-1">
           {siteConfig.name}
         </h1>
         <p className="text-sm text-text mb-1">
@@ -78,7 +78,7 @@ export default function Home() {
 
       <section>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xs font-semibold font-[family-name:var(--font-space-grotesk)] text-text-dim uppercase tracking-widest">
+          <h2 className="text-xs font-semibold font-display text-text-dim uppercase tracking-widest">
             Latest posts
           </h2>
           <Link
@@ -118,7 +118,7 @@ export default function Home() {
       {tags.length > 0 && (
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xs font-semibold font-[family-name:var(--font-space-grotesk)] text-text-dim uppercase tracking-widest">
+            <h2 className="text-xs font-semibold font-display text-text-dim uppercase tracking-widest">
               Tags
             </h2>
             <Link

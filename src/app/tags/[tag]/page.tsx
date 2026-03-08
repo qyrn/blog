@@ -40,7 +40,7 @@ export default async function TagPage({ params }: Props) {
           <ArrowLeft className="h-3 w-3" />
           All tags
         </Link>
-        <h1 className="text-2xl font-bold font-[family-name:var(--font-space-grotesk)] text-accent">
+        <h1 className="text-2xl font-bold font-display text-accent">
           #{decoded}
         </h1>
         <p className="text-sm text-text-dim mt-1">

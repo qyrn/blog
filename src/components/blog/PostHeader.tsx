@@ -47,7 +47,7 @@ export default function PostHeader({
         )}
       </div>
 
-      <h1 className="text-2xl md:text-3xl font-bold font-[family-name:var(--font-space-grotesk)] text-white mb-5 leading-tight">
+      <h1 className="text-2xl md:text-3xl font-bold font-display text-white mb-5 leading-tight">
         {title}
       </h1>
 

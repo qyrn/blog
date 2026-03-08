@@ -50,7 +50,7 @@ export default function PostCard({
         )}
       </div>
 
-      <h3 className="text-sm font-semibold font-[family-name:var(--font-space-grotesk)] text-text group-hover:text-accent transition-colors mb-2 leading-snug">
+      <h3 className="text-sm font-semibold font-display text-text group-hover:text-accent transition-colors mb-2 leading-snug">
         {title}
       </h3>
 

@@ -5,7 +5,7 @@ export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
       <Skull className="h-12 w-12 text-red mb-4" />
-      <h1 className="text-6xl font-bold font-[family-name:var(--font-space-grotesk)] text-accent mb-2">
+      <h1 className="text-6xl font-bold font-display text-accent mb-2">
         404
       </h1>
       <p className="text-sm text-text-dim mb-8">

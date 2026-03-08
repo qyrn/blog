@@ -46,7 +46,7 @@ export default function AboutPage() {
   return (
     <div className="space-y-12 max-w-3xl">
       <section>
-        <h1 className="text-2xl font-bold font-[family-name:var(--font-space-grotesk)] text-accent mb-2">
+        <h1 className="text-2xl font-bold font-display text-accent mb-2">
           /about
         </h1>
         <p className="text-sm text-text-dim">
@@ -57,7 +57,7 @@ export default function AboutPage() {
       <section className="space-y-4">
         <div className="flex items-center gap-2 text-text">
           <Terminal className="h-4 w-4 text-accent" />
-          <h2 className="text-base font-semibold font-[family-name:var(--font-space-grotesk)]">
+          <h2 className="text-base font-semibold font-display">
             whoami
           </h2>
         </div>
@@ -76,7 +76,7 @@ export default function AboutPage() {
       <section className="space-y-4">
         <div className="flex items-center gap-2 text-text">
           <BookOpen className="h-4 w-4 text-accent" />
-          <h2 className="text-base font-semibold font-[family-name:var(--font-space-grotesk)]">
+          <h2 className="text-base font-semibold font-display">
             Certifications
           </h2>
         </div>
@@ -100,7 +100,7 @@ export default function AboutPage() {
       <section className="space-y-4">
         <div className="flex items-center gap-2 text-text">
           <Target className="h-4 w-4 text-accent" />
-          <h2 className="text-base font-semibold font-[family-name:var(--font-space-grotesk)]">
+          <h2 className="text-base font-semibold font-display">
             Projects
           </h2>
         </div>
@@ -128,7 +128,7 @@ export default function AboutPage() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-base font-semibold font-[family-name:var(--font-space-grotesk)] text-text">
+        <h2 className="text-base font-semibold font-display text-text">
           Contact
         </h2>
         <div className="flex flex-wrap gap-3">
