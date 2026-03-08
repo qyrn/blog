@@ -27,7 +27,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-bg/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50" style={{ background: 'rgba(10,10,15,0.85)' }}>
       <motion.div
         variants={navVariants}
         initial="hidden"
@@ -42,7 +42,7 @@ export default function Header() {
           >
             <Link
               href="/"
-              className="text-lg font-bold font-display text-accent"
+              className="text-lg font-bold font-display text-accent block leading-normal"
             >
               qyrn://blog
             </Link>

@@ -8,6 +8,7 @@ const syne = Syne({
   subsets: ["latin"],
   variable: "--font-syne",
   display: "swap",
+  adjustFontFallback: false,
 });
 
 const firaCode = Fira_Code({
