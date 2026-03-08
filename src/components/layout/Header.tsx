@@ -27,12 +27,12 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="border-b border-border sticky top-0 z-50 bg-bg/80 backdrop-blur-md overflow-visible">
+    <header className="sticky top-0 z-50 bg-bg/80 backdrop-blur-md">
       <motion.div
         variants={navVariants}
         initial="hidden"
         animate="show"
-        className="mx-auto max-w-5xl px-6 flex items-center justify-between py-3.5"
+        className="mx-auto max-w-5xl px-6 flex items-center justify-between py-4 border-b border-border"
       >
         <motion.div variants={itemVariants}>
           <motion.div
