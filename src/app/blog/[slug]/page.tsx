@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { posts } from "#site/content";
-import { getPostBySlug, getTranslation } from "@/lib/posts";
+import { getPostBySlug, getTranslation, getRelatedPosts, getPublishedPosts } from "@/lib/posts";
 import PostContent from "@/components/blog/PostContent";
 import ReadingProgress from "@/components/blog/ReadingProgress";
 
@@ -39,6 +39,16 @@ export default async function PostPage({ params }: Props) {
   if (!post || !post.published) notFound();
 
   const translation = getTranslation(posts, post);
+  const published = getPublishedPosts(posts);
+  const related = getRelatedPosts(published, post, 3).map((p) => ({
+    title: p.title,
+    slug: p.slug,
+    date: p.date,
+    lang: p.lang,
+    type: p.type,
+    category: p.category,
+    readingTime: p.readingTime,
+  }));
 
   if (post.lang === "fr" && translation && translation.lang === "en") {
     redirect(`/blog/${translation.slug}`);
@@ -48,6 +58,7 @@ export default async function PostPage({ params }: Props) {
     <>
       <ReadingProgress />
       <PostContent
+        relatedPosts={related}
         post={{
           title: post.title,
           date: post.date,
@@ -57,6 +68,7 @@ export default async function PostPage({ params }: Props) {
           difficulty: post.difficulty,
           tags: post.tags,
           platform: post.platform,
+          coverImage: post.coverImage,
           excerpt: post.excerpt,
           body: post.body,
         }}
@@ -71,6 +83,7 @@ export default async function PostPage({ params }: Props) {
                 difficulty: translation.difficulty,
                 tags: translation.tags,
                 platform: translation.platform,
+                coverImage: translation.coverImage,
                 excerpt: translation.excerpt,
                 body: translation.body,
               }
