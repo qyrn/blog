@@ -40,17 +40,19 @@ export default defineConfig({
           difficulty: s.enum(["Easy", "Medium", "Hard"]),
           tags: s.array(s.string()),
           platform: s.string().optional(),
+          coverImage: s.string().optional(),
           excerpt: s.string().max(500),
           published: s.boolean().default(true),
           raw: s.raw(),
           body: s.mdx(),
         })
         .transform((data) => {
-          const { raw, ...rest } = data;
+          const { raw, coverImage, ...rest } = data;
           const wordCount = raw.split(/\s+/).filter(Boolean).length;
           const readingTime = Math.max(1, Math.ceil(wordCount / 200));
           return {
             ...rest,
+            coverImage: coverImage || null,
             permalink: `/blog/${data.slug}`,
             readingTime,
           };
