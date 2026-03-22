@@ -5,7 +5,7 @@ import HomeContent from "@/components/blog/HomeContent";
 export default function Home() {
   const published = getPublishedPosts(posts);
   const deduplicated = getDeduplicatedPosts(published);
-  const recent = deduplicated.slice(0, 4);
+  const recent = deduplicated.slice(0, 7);
   const tags = getAllTags(deduplicated).slice(0, 12);
 
   return <HomeContent recent={recent} tags={tags} />;

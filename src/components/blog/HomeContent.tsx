@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Terminal, Github, Target, Tag } from "lucide-react";
 import PostCard from "./PostCard";
+import FeaturedPostCard from "./FeaturedPostCard";
 import { siteConfig } from "@/config/site";
 import type { Post } from "#site/content";
 
@@ -41,7 +42,7 @@ export default function HomeContent({ recent, tags }: HomeContentProps) {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="space-y-14"
+      className="space-y-16"
     >
       <motion.section variants={itemVariants} className="pt-8 pb-2">
         <div className="flex items-center gap-2 text-accent mb-3 text-xs font-mono">
@@ -103,23 +104,42 @@ export default function HomeContent({ recent, tags }: HomeContentProps) {
           </Link>
         </div>
         {recent.length > 0 ? (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {recent.map((post) => (
-              <PostCard
-                key={post.slug}
-                title={post.title}
-                slug={post.slug}
-                date={post.date}
-                lang={post.lang}
-                type={post.type}
-                category={post.category}
-                difficulty={post.difficulty}
-                tags={post.tags}
-                excerpt={post.excerpt}
-                platform={post.platform}
-                readingTime={post.readingTime}
-              />
-            ))}
+          <div className="space-y-4">
+            <FeaturedPostCard
+              title={recent[0].title}
+              slug={recent[0].slug}
+              date={recent[0].date}
+              lang={recent[0].lang}
+              type={recent[0].type}
+              category={recent[0].category}
+              difficulty={recent[0].difficulty}
+              tags={recent[0].tags}
+              excerpt={recent[0].excerpt}
+              platform={recent[0].platform}
+              readingTime={recent[0].readingTime}
+              coverImage={recent[0].coverImage}
+            />
+            {recent.length > 1 && (
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {recent.slice(1).map((post) => (
+                  <PostCard
+                    key={post.slug}
+                    title={post.title}
+                    slug={post.slug}
+                    date={post.date}
+                    lang={post.lang}
+                    type={post.type}
+                    category={post.category}
+                    difficulty={post.difficulty}
+                    tags={post.tags}
+                    excerpt={post.excerpt}
+                    platform={post.platform}
+                    readingTime={post.readingTime}
+                    coverImage={post.coverImage}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         ) : (
           <div className="rounded-lg border border-border bg-bg-card p-8 text-center">
@@ -157,6 +177,15 @@ export default function HomeContent({ recent, tags }: HomeContentProps) {
           </div>
         </motion.section>
       )}
+      <motion.section variants={itemVariants} className="text-center py-4">
+        <Link
+          href="/blog"
+          className="inline-flex items-center gap-2 rounded-lg border border-accent bg-accent/10 px-6 py-3 text-sm text-accent transition-all hover:bg-accent/20"
+        >
+          Browse all posts
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      </motion.section>
     </motion.div>
   );
 }
