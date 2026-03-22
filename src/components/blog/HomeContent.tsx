@@ -44,21 +44,21 @@ export default function HomeContent({ recent, tags }: HomeContentProps) {
       animate="show"
       className="space-y-16"
     >
-      <motion.section variants={itemVariants} className="pt-8 pb-2">
-        <div className="flex items-center gap-2 text-accent mb-3 text-xs font-mono">
+      <motion.section variants={itemVariants} className="pt-12 pb-4 text-center">
+        <div className="inline-flex items-center gap-2 text-accent mb-4 text-xs font-mono">
           <Terminal className="h-3.5 w-3.5" />
           <span className="text-text-faint">~$</span>
           <span>whoami</span>
         </div>
 
-        <h1 className="text-3xl font-bold font-display text-accent mb-1">
+        <h1 className="text-4xl md:text-5xl font-bold font-display text-accent mb-2 tracking-tight">
           {siteConfig.name}
         </h1>
-        <p className="text-sm text-text-dim mb-6">
-          {siteConfig.author.name} — SOC Analyst / Pentester
+        <p className="text-sm text-text-dim mb-8">
+          {siteConfig.author.name} — Apprenti SOC Analyst
         </p>
 
-        <div className="flex flex-wrap gap-2 mb-7">
+        <div className="flex flex-wrap gap-2 mb-8 justify-center">
           {socials.map((social) => (
             <a
               key={social.label}
@@ -73,7 +73,7 @@ export default function HomeContent({ recent, tags }: HomeContentProps) {
           ))}
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 justify-center">
           <Link
             href="/blog"
             className="inline-flex items-center gap-2 rounded-lg border border-accent bg-accent/10 px-5 py-2.5 text-sm text-accent transition-all hover:bg-accent/20"
@@ -91,7 +91,7 @@ export default function HomeContent({ recent, tags }: HomeContentProps) {
       </motion.section>
 
       <motion.section variants={itemVariants}>
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-6">
           <h2 className="text-xs font-semibold font-display text-text-dim uppercase tracking-widest">
             Latest posts
           </h2>
@@ -162,7 +162,7 @@ export default function HomeContent({ recent, tags }: HomeContentProps) {
               <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 justify-center">
             {tags.map(({ tag, count }) => (
               <Link
                 key={tag}

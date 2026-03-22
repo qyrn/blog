@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Github, Terminal, Target } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
@@ -19,15 +20,21 @@ export default function AuthorBio({ lang }: { lang: string }) {
   return (
     <section className="mt-14 pt-10 border-t border-border/60">
       <div className="flex items-start gap-5">
-        <div className="h-14 w-14 shrink-0 rounded-full bg-accent/10 border border-border flex items-center justify-center">
-          <span className="text-lg font-bold font-display text-accent">q</span>
+        <div className="h-14 w-14 shrink-0 rounded-full overflow-hidden border border-border bg-bg-card">
+          <Image
+            src="/images/avatar.png"
+            alt={siteConfig.author.name}
+            width={56}
+            height={56}
+            className="object-cover"
+          />
         </div>
 
         <div className="min-w-0">
           <p className="text-sm font-semibold font-display text-white">
             {siteConfig.author.name}
           </p>
-          <p className="text-xs text-text-faint mt-0.5">SOC Analyst / Pentester</p>
+          <p className="text-xs text-text-faint mt-0.5">Apprenti SOC Analyst</p>
           <p className="text-sm text-text-dim mt-2.5 leading-relaxed">{bio}</p>
 
           <div className="flex items-center gap-3 mt-4">

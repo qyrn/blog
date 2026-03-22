@@ -49,8 +49,8 @@ export default function PostContent({
   }
 
   return (
-    <div className="flex gap-10 justify-center">
-      <article className="w-full max-w-[680px] min-w-0">
+    <div className="xl:flex xl:gap-10 xl:justify-center">
+      <article className="w-full max-w-[680px] mx-auto xl:mx-0 min-w-0">
         <PostHeader
           title={active.title}
           date={active.date}

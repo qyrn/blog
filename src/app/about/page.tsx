@@ -44,7 +44,7 @@ const socials = [
 
 export default function AboutPage() {
   return (
-    <div className="space-y-12 max-w-3xl">
+    <div className="space-y-12 max-w-3xl mx-auto">
       <section>
         <h1 className="text-2xl font-bold font-display text-accent mb-2">
           /about
