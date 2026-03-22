@@ -35,6 +35,7 @@ export default defineConfig({
             "RE",
             "Misc",
             "App-Script",
+            "Scripting",
           ]),
           difficulty: s.enum(["Easy", "Medium", "Hard"]),
           tags: s.array(s.string()),

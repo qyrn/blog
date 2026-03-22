@@ -18,6 +18,7 @@ export const CATEGORIES: { value: Category; label: string }[] = [
   { value: "RE", label: "RE" },
   { value: "Misc", label: "Misc" },
   { value: "App-Script", label: "App-Script" },
+  { value: "Scripting", label: "Scripting" },
 ];
 
 export const DIFFICULTIES: { value: Difficulty; label: string; color: string }[] = [
@@ -49,6 +50,7 @@ export const CATEGORY_STYLES: Record<Category, string> = {
   RE: "bg-fuchsia/20 border-fuchsia text-fuchsia",
   Misc: "bg-purple/20 border-purple text-purple",
   "App-Script": "bg-teal/20 border-teal text-teal",
+  Scripting: "bg-cyan/20 border-cyan text-cyan",
 };
 
 export const DIFFICULTY_STYLES: Record<Difficulty, string> = {
