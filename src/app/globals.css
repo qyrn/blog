@@ -126,6 +126,8 @@ body {
   --tw-prose-td-borders: #1e1e2e;
 }
 
+html { scroll-behavior: smooth; }
+
 .prose a {
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -134,6 +136,40 @@ body {
 
 .prose a:hover {
   color: #c4b5fd;
+}
+
+.prose :where(h2) {
+  margin-top: 2.5em;
+  margin-bottom: 0.8em;
+  letter-spacing: -0.01em;
+}
+
+.prose :where(h3) {
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+
+.prose :where(p) {
+  margin-bottom: 1.5em;
+}
+
+.prose :where(blockquote) {
+  border-left-width: 3px;
+  border-left-color: #a78bfa;
+  background: rgba(167, 139, 250, 0.04);
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-style: normal;
+}
+
+.prose :where(blockquote p) {
+  margin-bottom: 0;
+}
+
+.prose :where(hr) {
+  border-color: #1e1e2e;
+  margin-top: 3em;
+  margin-bottom: 3em;
 }
 
 .prose :where(code):not(:where(pre *)) {

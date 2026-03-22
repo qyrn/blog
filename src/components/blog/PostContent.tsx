@@ -3,7 +3,19 @@
 import { useState } from "react";
 import PostHeader from "./PostHeader";
 import PostBody from "./PostBody";
+import AuthorBio from "./AuthorBio";
+import RelatedPosts from "./RelatedPosts";
 import TableOfContents from "./TableOfContents";
+
+interface RelatedPostData {
+  title: string;
+  slug: string;
+  date: string;
+  lang: string;
+  type: string;
+  category: string;
+  readingTime: number;
+}
 
 interface PostData {
   title: string;
@@ -14,6 +26,7 @@ interface PostData {
   difficulty: string;
   tags: string[];
   platform?: string;
+  coverImage?: string | null;
   excerpt: string;
   body: string;
 }
@@ -21,9 +34,11 @@ interface PostData {
 export default function PostContent({
   post,
   translation,
+  relatedPosts = [],
 }: {
   post: PostData;
   translation?: PostData;
+  relatedPosts?: RelatedPostData[];
 }) {
   const [lang, setLang] = useState(post.lang);
 
@@ -34,8 +49,8 @@ export default function PostContent({
   }
 
   return (
-    <div className="flex gap-10">
-      <article className="flex-1 min-w-0">
+    <div className="flex gap-10 justify-center">
+      <article className="w-full max-w-[680px] min-w-0">
         <PostHeader
           title={active.title}
           date={active.date}
@@ -46,13 +61,17 @@ export default function PostContent({
           tags={active.tags}
           platform={active.platform}
           body={active.body}
+          coverImage={active.coverImage}
           onToggle={translation ? toggle : undefined}
         />
 
         <PostBody code={active.body} />
+
+        <AuthorBio lang={active.lang} />
+        <RelatedPosts posts={relatedPosts} lang={active.lang} />
       </article>
 
-      <aside className="w-52 shrink-0">
+      <aside className="hidden xl:block w-48 shrink-0">
         <TableOfContents key={lang} />
       </aside>
     </div>

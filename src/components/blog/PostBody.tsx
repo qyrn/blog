@@ -12,7 +12,7 @@ export default function PostBody({ code }: { code: string }) {
   const Component = getMDXComponent(code);
   const components = useMDXComponents({});
   return (
-    <div className="prose prose-invert max-w-none">
+    <div className="prose prose-lg prose-invert max-w-none">
       <Component components={components} />
     </div>
   );
