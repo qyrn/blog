@@ -1,10 +1,14 @@
 {
-  "name": "pseudo",
-  "bio": "Apprenti pentester. Writeups, tutoriels et veille cybersécurité.",
+  "name": "qyrn",
+  "role": "SOC Analyst / Pentester",
+  "bio": {
+    "en": "Cybersecurity enthusiast sharing writeups, tutorials and technical notes from the trenches.",
+    "fr": "Passionné de cybersécurité. Writeups, tutoriels et notes techniques du terrain."
+  },
   "avatar": "/images/avatar.png",
   "links": {
-    "github": "",
-    "linkedin": "",
-    "hackthebox": ""
+    "github": "https://github.com/qyrn",
+    "hackthebox": "https://profile.hackthebox.com/profile/019c5e2f-2184-7309-a6af-ff74d06aa636",
+    "tryhackme": "https://tryhackme.com/p/qyrn"
   }
 }
