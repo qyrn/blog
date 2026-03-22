@@ -1,0 +1,139 @@
+---
+title: "I coded my own nmap (a much simpler one)"
+slug: "port-scanner-python-en"
+date: 2026-03-22
+lang: en
+translationSlug: "port-scanner-python"
+type: journal
+category: Scripting
+difficulty: Easy
+tags: ["python", "socket", "threading", "scanner", "networking", "beginner"]
+platform: "Python"
+excerpt: "One socket, one loop, and 1024 ports scanned in seconds. What I understood by building a port scanner from scratch instead of just running nmap."
+published: true
+---
+
+## Why code a scanner
+
+I've been using nmap for a few weeks. I run the command, I read the output, it works. But I didn't understand what was happening between the moment I press Enter and the moment the terminal shows me "open".
+
+So I decided to code my own. Not to replace nmap. To understand what it does.
+
+## The skeleton: a socket and a loop
+
+The core of a port scanner is a TCP socket. You try to connect to each port. If the connection succeeds, the port is open. Otherwise, it's closed.
+
+```python
+import socket
+
+host = "scanme.nmap.org"
+
+for port in range(1, 1025):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(1)
+    result = s.connect_ex((host, port))
+    if result == 0:
+        print(f"Port {port} open")
+    s.close()
+```
+
+`connect_ex` returns `0` if the connection succeeded, something else otherwise. It's the version that doesn't raise an exception, unlike `connect`.
+
+The problem: scanning 1024 ports one by one, with a one-second timeout each, can take over 15 minutes.
+
+## Going multi-threaded
+
+The fix is to scan multiple ports in parallel. Instead of waiting for one port to respond before moving to the next, we launch multiple connections at the same time.
+
+```python
+import threading
+
+semaphore = threading.Semaphore(100)
+
+def scan_port(host, port):
+    with semaphore:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(1)
+        result = s.connect_ex((host, port))
+        if result == 0:
+            print(f"Port {port} open")
+        s.close()
+
+threads = []
+for port in range(1, 1025):
+    t = threading.Thread(target=scan_port, args=(host, port))
+    threads.append(t)
+    t.start()
+
+for t in threads:
+    t.join()
+```
+
+`Semaphore(100)` limits the number of active threads to 100. Without it, the system tries to open hundreds of connections at once and crashes with `Too many open files`.
+
+That was the first error I hit. The scanner worked on 100 ports, but crashed on 1024. The Semaphore fixed everything.
+
+## argparse: stop hardcoding values
+
+At first, the target IP and port range were written directly in the code. Every test required editing the script.
+
+```python
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--host", required=True)
+parser.add_argument("--start", type=int, default=1)
+parser.add_argument("--end", type=int, default=1024)
+args = parser.parse_args()
+```
+
+Now the scanner works like an actual CLI tool:
+
+```bash
+python3 scanner.py --host scanme.nmap.org --start 1 --end 1024
+```
+
+## Banner grabbing: identifying what's running behind
+
+Knowing a port is open is good. Knowing which service runs on it is better. After a successful connection, we send a few bytes and read the response. That's called banner grabbing.
+
+```python
+def grab_banner(host, port):
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(2)
+        s.connect((host, port))
+        s.send(b"HEAD / HTTP/1.0\r\n\r\n")
+        banner = s.recv(1024)
+        return banner.decode(errors="ignore").strip()
+    except:
+        return None
+    finally:
+        s.close()
+```
+
+The `errors="ignore"` in `decode` matters. Without it, the script crashes whenever a service sends back bytes that aren't valid UTF-8.
+
+Typical result: port 80 responds `Apache/2.4.7 (Ubuntu)`. That's exactly the kind of info you're looking for during reconnaissance: service name, version, and potentially the OS.
+
+## Mistakes that cost me time
+
+`connect.ex` instead of `connect_ex`. A dot instead of an underscore. Python doesn't make it obvious that the method doesn't exist when you're inside a loop that catches exceptions.
+
+The socket created outside the loop. First port: works. Second port: connection refused. You need a new socket for each connection, because a closed socket can't be reused.
+
+`decode()` without `errors="ignore"`. The script worked on standard HTTP servers, but crashed on some services that send back raw binary.
+
+## What this taught me vs nmap
+
+My scanner does one thing: test if a port is open and grab the banner. nmap does that plus OS detection, version detection, NSE scripting, firewall evasion, and dozens of other things.
+
+But now when I run `nmap -sT`, I know that behind it there's a `connect_ex` (or equivalent). When I see `-sS`, I know it's a scan that sends a SYN without completing the handshake — something my scanner doesn't do because it requires raw sockets and root privileges.
+
+Building the tool gave me an understanding I didn't have by just running it.
+
+## Resources
+
+- [Python `socket` — official docs](https://docs.python.org/3/library/socket.html)
+- [Python `threading` — official docs](https://docs.python.org/3/library/threading.html)
+- [scanme.nmap.org](http://scanme.nmap.org) — authorized server for scan testing
