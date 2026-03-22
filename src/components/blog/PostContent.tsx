@@ -67,7 +67,7 @@ export default function PostContent({
 
         <PostBody code={active.body} />
 
-        <AuthorBio lang={active.lang} />
+        <AuthorBio />
         <RelatedPosts posts={relatedPosts} lang={active.lang} />
       </article>
 

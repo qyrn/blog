@@ -9,13 +9,7 @@ const socials = [
   { icon: Target, label: "THM", href: siteConfig.author.tryhackme },
 ];
 
-const bios: Record<string, string> = {
-  en: "Cybersecurity enthusiast sharing writeups, tutorials and technical notes from the trenches.",
-  fr: "Passionné de cybersécurité. Writeups, tutoriels et notes techniques du terrain.",
-};
-
-export default function AuthorBio({ lang }: { lang: string }) {
-  const bio = bios[lang] || bios.en;
+export default function AuthorBio() {
 
   return (
     <section className="mt-14 pt-10 border-t border-border/60">
@@ -34,8 +28,7 @@ export default function AuthorBio({ lang }: { lang: string }) {
           <p className="text-sm font-semibold font-display text-white">
             {siteConfig.author.name}
           </p>
-          <p className="text-xs text-text-faint mt-0.5">Apprenti SOC Analyst</p>
-          <p className="text-sm text-text-dim mt-2.5 leading-relaxed">{bio}</p>
+          <p className="text-sm text-text-dim mt-1.5 leading-relaxed">learning pentest • film enjoyer • contact@qyrn.dev</p>
 
           <div className="flex items-center gap-3 mt-4">
             {socials.map((social) => (
@@ -55,7 +48,7 @@ export default function AuthorBio({ lang }: { lang: string }) {
               href="/blog"
               className="text-xs text-text-faint hover:text-accent transition-colors"
             >
-              {lang === "fr" ? "Tous les articles" : "All posts"}
+              All posts
             </Link>
           </div>
         </div>

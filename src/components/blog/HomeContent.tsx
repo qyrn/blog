@@ -55,7 +55,7 @@ export default function HomeContent({ recent, tags }: HomeContentProps) {
           {siteConfig.name}
         </h1>
         <p className="text-sm text-text-dim mb-8">
-          {siteConfig.author.name} — Apprenti SOC Analyst
+          {siteConfig.author.name}
         </p>
 
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
