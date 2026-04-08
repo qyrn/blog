@@ -10,7 +10,8 @@ export type Category =
   | "RE"
   | "Misc"
   | "App-Script"
-  | "Scripting";
+  | "Scripting"
+  | "Progression";
 
 export type Difficulty = "Easy" | "Medium" | "Hard";
 
