@@ -31,6 +31,12 @@ body {
   66% { transform: translate(-10px, 10px) scale(0.97); }
 }
 
+.orb, .orb-2 {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout paint;
+}
 .orb { animation: orb-drift 18s ease-in-out infinite; }
 .orb-2 { animation: orb-drift 22s ease-in-out infinite reverse; }
 
