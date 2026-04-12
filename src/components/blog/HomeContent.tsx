@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Terminal, Github, Target, Tag } from "lucide-react";
+import { ArrowRight, Terminal, Github, Target, Tag, Flag } from "lucide-react";
 import PostCard from "./PostCard";
 import FeaturedPostCard from "./FeaturedPostCard";
 import { siteConfig } from "@/config/site";
@@ -88,6 +88,32 @@ export default function HomeContent({ recent, tags }: HomeContentProps) {
             About
           </Link>
         </div>
+      </motion.section>
+
+      <motion.section variants={itemVariants}>
+        <Link
+          href="/tags/phase-1"
+          className="group block rounded-xl border border-accent/40 bg-gradient-to-br from-accent/10 via-accent/5 to-transparent p-5 transition-all hover:border-accent/70 hover:bg-accent/10"
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md border border-accent/50 bg-accent/10 text-accent">
+              <Flag className="h-4 w-4" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[11px] font-mono text-accent uppercase tracking-widest">
+                Milestone · 2026-04-12
+              </span>
+              <span className="text-sm font-semibold font-display text-white">
+                Phase 1 de la roadmap terminée
+              </span>
+            </div>
+            <ArrowRight className="ml-auto h-4 w-4 text-text-faint transition-all group-hover:translate-x-1 group-hover:text-accent" />
+          </div>
+          <p className="text-xs text-text-dim leading-relaxed pl-11">
+            8 semaines de fondations : Linux, réseau, Python offensif, Burp, OSINT.
+            Lire le bilan et retrouver tous les articles de la phase.
+          </p>
+        </Link>
       </motion.section>
 
       <motion.section variants={itemVariants}>
