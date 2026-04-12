@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { posts } from "#site/content";
-import { getPublishedPosts, getAllTags } from "@/lib/posts";
+import { getPublishedPosts, getDeduplicatedPosts, getAllTags } from "@/lib/posts";
 import { Tag } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 
 export default function TagsPage() {
   const published = getPublishedPosts(posts);
-  const tags = getAllTags(published);
+  const deduplicated = getDeduplicatedPosts(published);
+  const tags = getAllTags(deduplicated);
 
   return (
     <div className="space-y-8">
@@ -20,7 +21,7 @@ export default function TagsPage() {
           /tags
         </h1>
         <p className="text-sm text-text-dim">
-          {tags.length} tags, {published.length} article{published.length !== 1 ? "s" : ""}
+          {tags.length} tags, {deduplicated.length} article{deduplicated.length !== 1 ? "s" : ""}
         </p>
       </div>
 

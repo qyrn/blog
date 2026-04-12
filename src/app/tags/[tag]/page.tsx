@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { posts } from "#site/content";
-import { getPublishedPosts, filterPosts, getAllTags } from "@/lib/posts";
+import { getPublishedPosts, getDeduplicatedPosts, filterPosts, getAllTags } from "@/lib/posts";
 import PostCard from "@/components/blog/PostCard";
 import { ArrowLeft } from "lucide-react";
 
@@ -28,7 +28,8 @@ export default async function TagPage({ params }: Props) {
   const { tag } = await params;
   const decoded = decodeURIComponent(tag);
   const published = getPublishedPosts(posts);
-  const filtered = filterPosts(published, { tag: decoded });
+  const deduplicated = getDeduplicatedPosts(published);
+  const filtered = filterPosts(deduplicated, { tag: decoded });
 
   return (
     <div className="space-y-8">
