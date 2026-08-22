@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Syne, Outfit, JetBrains_Mono } from "next/font/google";
 import Providers from "@/components/layout/Providers";
-import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
@@ -91,7 +90,6 @@ export default function RootLayout({
           }}
         />
         <Providers>
-          <Header />
           <main className="flex-1 mx-auto w-full max-w-5xl px-6 py-8 relative z-10">
             {children}
           </main>
