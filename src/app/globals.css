@@ -53,8 +53,41 @@ body {
   animation: glitch 0.3s ease-in-out;
 }
 
+.grid-texture {
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(167, 139, 250, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167, 139, 250, 0.09) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 75%);
+}
+
+@keyframes shimmer-text {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.shimmer-text {
+  background-image: linear-gradient(
+    90deg,
+    #7c3aed 0%,
+    #a78bfa 20%,
+    #c4b5fd 38%,
+    #ede9fe 50%,
+    #c4b5fd 62%,
+    #a78bfa 80%,
+    #7c3aed 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-text 4s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .orb, .orb-2 { animation: none; }
+  .shimmer-text { animation: none; -webkit-text-fill-color: #a78bfa; }
   * { animation: none !important; transition: none !important; }
 }
 
@@ -67,7 +100,7 @@ body {
 }
 
 [data-rehype-pretty-code-figure] code {
-  font-family: var(--font-fira-code), ui-monospace, monospace;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
   font-size: 0.875rem;
   line-height: 1.7;
   counter-reset: line;
@@ -98,7 +131,7 @@ body {
 [data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] {
   padding: 0.5rem 1.25rem;
   font-size: 0.8rem;
-  font-family: var(--font-fira-code), ui-monospace, monospace;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
   color: #6b6b80;
   background: #0f0f18;
   border: 1px solid #1e1e2e;

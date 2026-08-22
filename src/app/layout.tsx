@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Syne, Fira_Code } from "next/font/google";
+import { Syne, Outfit, JetBrains_Mono } from "next/font/google";
 import Providers from "@/components/layout/Providers";
 import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 const syne = Syne({
@@ -11,9 +12,15 @@ const syne = Syne({
   adjustFontFallback: false,
 });
 
-const firaCode = Fira_Code({
+const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-fira-code",
+  variable: "--font-outfit",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
   display: "swap",
 });
 
@@ -55,8 +62,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`dark ${syne.variable} ${firaCode.variable}`}>
+    <html
+      lang="en"
+      className={`dark ${syne.variable} ${outfit.variable} ${jetbrainsMono.variable}`}
+    >
       <body className="min-h-screen flex flex-col bg-bg font-sans">
+        <div aria-hidden="true" className="grid-texture pointer-events-none fixed inset-0" />
         <div
           aria-hidden="true"
           className="orb pointer-events-none fixed"
@@ -84,6 +95,7 @@ export default function RootLayout({
           <main className="flex-1 mx-auto w-full max-w-5xl px-6 py-8 relative z-10">
             {children}
           </main>
+          <Footer />
         </Providers>
       </body>
     </html>
