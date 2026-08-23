@@ -1,0 +1,87 @@
+---
+title: "IDOR : la faille N°1 de l'OWASP que personne ne prend au sérieux"
+slug: "idor-faille-owasp-2026"
+date: 2026-08-23
+lang: fr
+type: watch
+category: Web
+difficulty: Easy
+tags: ["idor", "owasp", "controle-acces", "web", "soc", "pentest"]
+excerpt: "IDOR est la faille la plus basique du top 10 OWASP mais aussi une des plus exploitées. Cet article détaille la faille, ses cas récents en France (litige.fr, ÉduConnect), pourquoi elle persiste en 2026, comment s'en défendre, et surtout comment un SOC la détecte."
+published: true
+---
+
+## Introduction
+
+En 2026, 100% des applications testées par OWASP présentent au moins une faille de contrôle d'accès. Broken Access Control est passé de la 5e à la 1re place de l'OWASP Top 10 en 2021, et n'a jamais quitté cette position depuis. Son représentant le plus simple ? L'IDOR. Une faille tellement basique qu'on l'apprend le premier jour en pentest. Et pourtant, en 2026, elle continue de faire fuiter des dizaines de millions de données personnelles en France.
+
+## C'est quoi un IDOR ?
+
+Un IDOR c'est une vulnérabilité affiliée aux problèmes de droits, qui apparait quand une référence directe à un objet peut être contrôlée par un utilisateur. Ce type de vulnérabilité permet de s'accorder des privilèges de façon horizontale (c'est-à-dire accéder à des informations d'utilisateurs ayant les mêmes droits).
+
+Imaginons que nous soyons sur un SaaS, qui a pour spécificité de pouvoir lire/écrire sur des factures basé sur une URL avec une ID spécifique pour chaque facture, avec des contrôles de droits mal configurés, ce qui en général, permettrait à un utilisateur d'accéder aux factures d'autrui juste en modifiant l'ID dans son URL.
+
+L'utilisateur malveillant qui voit une URL comme ci : `https://www.saasfacture.com/factures/041`. Il testera forcément de changer cet ID pour voir s'il aura accès à d'autres factures, si les droits sont mal configurés, il pourra donc accéder aux factures de n'importe qui.
+
+Imaginons qu'il change cet ID en `https://www.saasfacture.com/factures/045`. Si ce fichier existe dans la base de donnée et qu'aucun contrôle de droits n'est fait, l'utilisateur aura accès à ce fichier sans aucun problème, on parlera donc d'une IDOR. L'impact de ce type de vulnérabilité peut être critique en fonction de la sensibilité des données.
+
+## Cas réels récents
+
+Cette année, la France a connu énormément de cyberattaques mais celles qui concernent une faille IDOR sont une minorité, mais existent quand même. Tous les services qui ont été touchés sont : ÉduConnect; ANTS / France Titres; Cegedim Santé; FICOBA / DGFiP; Freemobile. Ces 5 services vulnérables, concernent toutes les données importantes pour les Français, comme l'Éducation (pour ÉduConnect), l'identité et les titres (pour ANTS / France Titres), la santé (pour Cegedim Santé), les Finances Publiques (pour FICOBA / DGFiP), les Télécoms (pour Freemobile). En tout c'est 55,4 millions de comptes exposés (chiffres confirmés ou revendiqués selon les cas), ce qui nous démontre, que même après des dizaines d'années avec tous les moyens que nous possédons pour ne plus faire ces erreurs là, des grosses entreprises laissent encore passer ces failles basiques.
+
+Par simple comparatif, en 2026, la France figure parmi les pays européens les plus touchés avec +37% d'incidents lors du T1 2026. (Synthèse à partir des données ENISA, ANSSI et analyses sectorielles 2025-2026.)
+
+Pour parler plus récemment, au lieu du T1 2026, la France a connu une énorme faille IDOR sur le site **litige.fr**. L'auteur a affirmé avoir exploité une faille critique de contrôle d'accès permettant d'accéder aux informations de plus de 2 millions d'utilisateurs. Selon les revendications de l'auteur, les données sensibles auxquels il a eu accès concernent : Nom & Prénom; Numéro de téléphone; Adresse complète; Identifiant interne. Il n'y a aucune mention de mot de passe ni de documents donc le périmètre reste inconnu tout de même.
+
+Les risques réels de ce genre de fuites sont simples : phishing (hameçonnage), suite à ça, nous pouvons tous être ciblés par des mails ou des appels d'hameçonnage très spécifique sur nos informations pour paraître réel et ainsi pouvoir y récupérer de l'argent pour les personnes les plus vulnérables ou les plus crédules face à ce genre d'arnaque.
+
+> **Mon avis personnel face à ce genre d'incident :** Je pense que ça doit arriver, pour le bien de tous, sauf que ce que je n'apprécie pas dans ça, c'est la vente de ces données sensibles à des personnes malveillantes, ça fait avancer au niveau de la cybersécurité et ça met en alerte les gros services pour qu'ils recrutent de meilleurs Analyste Soc ou Pentester, pour qu'on soit tous protégés de réels cyberattaquants malveillants.
+
+## Pourquoi c'est encore courant en 2026 ?
+
+Les raisons techniques et structurelles de sa persistance se reposent tout simplement sur des choses toutes bêtes. Commençons par l'explosion des modèles "API-First"; Les applications modernes ne sont plus des gros blocs comme avant, ce sont des milliers d'API interconnectées qui s'échangent des **identifiants directs d'objets**; On retrouve ici littéralement la définition de l'IDOR. Plus le nombre d'endpoints augmente à cause des APIs, plus il devient difficile pour les développeurs de maintenir une politique d'autorisation uniforme sur chaque fonction.
+
+La deuxième raison se base sur l'automatisation du code par Intelligence Artificielle; En 2026, l'utilisation des IA pour générer du code est quasi présente chez les développeurs. Il est vrai que c'est utile pour faciliter la production de site web ou de débogage, mais généralement ils vont avoir tendance à générer du code fonctionnel mais faire passer en second plan la sécurité, car nous ne lui précisons pas cela. En omettant la sécurité, ils propagent des failles de sécurité très critiques et des failles de logique, ce qui permet à quiconque d'en trouver une et de l'exploiter.
+
+La troisième raison repose sur l'incapacité des scanners de vulnérabilités automatisés de détecter les failles IDOR; Contrairement aux failles SQLi ou les XSS, une IDOR n'est pas un défaut du code. La requête de l'attaquant est techniquement légitime : seul le contexte de l'autorisation ne l'est pas. Les scanners de sécurité classiques passent à côté dans la majorité des cas car ils ne peuvent pas deviner la logique métier (savoir si l'utilisateur A a le droit d'accéder à la facture de l'utilisateur B). Seuls les tests d'intrusions (pentests) manuels permettent de les détecter.
+
+## Les défenses concrètes face aux IDOR
+
+Les défenses face aux IDOR sont paradoxales : la faille est simple, les protections aussi. Généralement, on peut penser que remplacer les IDs par les UUIDs, certes ça peut rendre un peu plus difficile la tâche pour les cyberattaquants, mais ça ne protège en rien l'escalation de privilèges, au contraire, avec des méthodes de brute-forces quiconque pourra quand même y accéder.
+
+Donc pour y remédier totalement, il faudrait utiliser une vérification des autorisations côté serveur; Je m'explique, il ne faut jamais faire confiance aux identifiants (comme un `user_id`) transmis par le client et l'URL. Il faut toujours récupérer l'identité et l'utilisateur directement depuis la session active et vérifier s'il est propriétaire de l'objet ou non. Il y a aussi les endpoints en `/me` qui éliminent aussi les risques d'IDOR; Aucun identifiant requis dans l'URL, l'application n'utilise plus des identifiants variables, c'est le serveur qui détermine l'identité du demandeur uniquement via le jeton d'authentification ou le cookie de session sécurisé.
+
+Comme je l'ai dit au début, les meilleures défenses sont aussi les plus simples; une simple vérification, un changement d'endpoints et en complément l'ajout des UUIDs si nécessaire. Avec ces 3 défenses combinées, vous éliminez la grande majorité des risques d'IDOR sur votre application. Pour aussi tester cela en production, vous pouvez faire des tests automatisés (CI/CD), en intégrant des tests de sécurité ciblés pour simuler des accès non autorisés (par exemple, un utilisateur qui tente d'afficher des données d'un autre) lors des phases de développement et d'intégration continue.
+
+## Point de vue SOC
+
+En tant qu'analyste SOC, on priorise l'analyse de logs et les indicateurs de compromission (IoC / comportementaux).
+
+1. Puisque les failles IDOR ne déclenchent aucune alerte, le SOC cherchera donc des anomalies comportementales dans les logs applicatifs :
+
+   - Volumes anormaux de requêtes : Un même utilisateur navigue rapidement à travers des identifiants aléatoires en un temps record (ex: 500 requêtes sur des `user_id` différents en 2 minutes).
+   - Changement de contexte d'accès : Un utilisateur associé à l'entreprise A (ou au rôle client) qui va émettre d'un coup des requêtes ciblant des ressources rattachées à l'entreprise B ou à des comptes administrateur.
+   - Taux d'erreurs ou motifs suspects : Analyser des status codes HTTP inhabituels suivis d'une succession de réussites, ou à l'inverse, un volume élevé de requêtes retournant des tailles de payload similaires.
+
+2. Pour qu'un analyste SOC puisse pister une IDOR, le SIEM doit ingérer des logs applicatifs riches :
+
+   - Ne pas se limiter aux logs réseaux (`IP source`, `Destination`, `Status Code`).
+   - Capturer l'identifiant de l'utilisateur authentifié (`user_id` / `session_id`) comparé à l'identifiant de la ressource demandée dans la charge utile ou l'URL.
+   - Corréler ces données pour détecter l'inadéquation : `User.ID != Resource.Owner.ID` (cette règle de corrélation SIEM nécessite que les logs applicatifs incluent à la fois l'identifiant de la session ET l'identifiant de la ressource demandée. C'est là que ça bloque souvent : les logs applicatifs classiques ne contiennent pas cette information.)
+
+3. Investigation et levée de doute
+
+   - L'analyste extrait l'adresse IP, le compte compromis et l'étendue des comptes consultés.
+   - Il vérifie si le compte utilisé appartient à un testeur (ex: pentester interne) ou s'il s'agit d'une compromission de compte avérée où l'attaquant pille la base de données.
+   - Il fait remonter l'information à l'équipe AppSec pour corriger le code défaillant.
+
+4. Action de réponse (Remédiation / SOAR)
+
+   - Confinement immédiat : Si un compte utilisateur est en train d'aspirer des données via une faille IDOR, le SOC peut révoquer immédiatement le token de session ou bloquer l'IP via le SOAR ou le WAF.
+   - Amélioration continue : Transmettre les patterns d'attaques observés pour renforcer la sécurité et les règles de validations des accès à l'échelle de l'API.
+
+## Conclusion
+
+Pour en conclure, on reconnait bien que les failles IDOR, sont des failles enfantines, mais qui peuvent s'avérer critiques. En soi c'est une faille assez basique à protéger, quiconque ayant un site web devrait vérifier toutes les choses que j'ai pu écrire précédemment, c'est essentiel pour la protection de ses utilisateurs ainsi que les données personnelles de quiconque. Nous sommes tous la cible des cyberattaques malveillantes, mais elles nous atteignent encore plus quand c'est lié à des gros services ou aux services gouvernementaux, nos données peuvent être divulguées et utilisées à des fins personnelles pour de sournoises escroqueries. On ne peut pas se protéger de ça, tout ce qu'on peut faire, c'est faire attention aux mails de phishing, vérifier qui envoie, comment est écrit le mail, vérifier sur internet en corrélant les informations du mail avec des sites comme `Virustotal`, `Phishing Initiative` (qui est une initiative française !), `Mailarnaque.fr` (encore un outil français !).
+
+Faites attention à vous et à vos données.
