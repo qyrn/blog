@@ -1,0 +1,120 @@
+---
+title: "SQLi through a SOC's eyes: the 10 patterns to spot in your logs"
+slug: "sqli-log-patterns-soc-2026"
+date: 2026-09-01
+lang: en
+translationSlug: "sqli-patterns-logs-soc-2026"
+type: watch
+category: Web
+difficulty: Medium
+tags: ["sqli", "sql-injection", "soc", "siem", "detection", "web"]
+excerpt: "SQL injection is the most heavily taught vulnerability in pentesting, but rarely from the detection side. This article covers 10 SQLi patterns to spot in your HTTP and SQL logs, and why SIEM correlation is what separates a false positive from an active attack."
+published: true
+---
+
+**TL;DR** — SQL injection is the star of every offensive security course, but few SOC analysts can actually spot it across millions of log lines. This article covers 10 SQLi patterns you can identify in your HTTP and SQL logs, and why event correlation inside the SIEM is what really makes the difference between a false positive and an active attack.
+
+## Introduction
+
+SQL injection (SQLi) sits at A03 in the OWASP Top 10. It's the star of every cybersecurity course out there: every aspiring pentester masters it on the offensive side. Yet in 2026, one question remains open: how many junior SOC analysts can actually detect it across millions of log lines?
+
+As a self-taught learner working toward becoming a SOC analyst (and a pentester later on), I keep running into the same wall: most French-speaking cybersecurity content swears only by offense and red teaming. It explains how to break the door open, rarely how to spot the burglar.
+
+This article is my contribution to the blue team side. Away from the usual "hacker" content, let's talk defense. The goal is simple: give you the keys to identify SQL injection patterns directly in your HTTP and database event logs.
+
+## Why it matters
+
+A SOC that doesn't master these patterns stays blind to live data exfiltration. The stakes are critical: a single successful SQL injection is often enough to compromise an entire database.
+
+The financial consequences are massive. According to IBM's 2024 *Cost of a Data Breach* report, the average cost of a data breach reached $4.88 million.
+
+Against this kind of threat, every minute counts. Catching the attack during the reconnaissance phase lets you cut access before the attacker downloads your sensitive tables. Passive defense isn't enough anymore, active log analysis is an operational necessity.
+
+## The 10 SQLi patterns to spot
+
+1. **UNION SELECT**: this pattern combines the results of the legitimate query with a malicious one to steal data. Legitimate websites almost never use the `UNION` operator directly on unfiltered user input, its presence in a URL or request body is a clear sign of an attempt to extract unauthorized tables.
+
+   ```
+   GET /products.php?id=12+UNION+SELECT+null,username,password+FROM+users HTTP/1.1
+   ```
+
+2. **%27, the escape character**: this is the URL encoding of a single quote (`'`), used to break the syntax of a SQL query. Injecting this character forces the database engine to close an expected string, letting the attacker probe the vulnerability or chain SQL commands afterward.
+
+   ```
+   POST /login.php HTTP/1.1
+   Host: target.com
+   username=admin%27&password=password
+   ```
+
+3. **--, the SQL comment**: this pattern uses a double dash to comment out and neutralize the rest of the SQL query. By truncating the logical continuation of the original query, the attacker often cancels out security checks like password validation. It's the universal marker of a successful or attempted SQL injection.
+
+   ```
+   GET /search.php?query=apple%27-- HTTP/1.1
+   ```
+
+4. **OR 1=1, the boolean injection**: this pattern injects an always-true logical condition to bypass authentication or filtering mechanisms. That tautology forces the database to return every record in the table, regardless of the original criteria. It's the typical signature of an automated attack or a blind admin-access attempt.
+
+   ```
+   POST /auth HTTP/1.1
+   user=admin&pass=%27+OR+1%3D1+--
+   ```
+
+5. **information_schema, reconnaissance**: this pattern targets the standard system database that holds the metadata for every other table. No standard application user or process needs to query `information_schema` directly for a site to work normally. Its presence shows an active phase of an attacker mapping out your database structure.
+
+   ```
+   GET /item.php?id=-1+UNION+SELECT+1,table_name+FROM+information_schema.tables HTTP/1.1
+   ```
+
+6. **SLEEP / pg_sleep, time-based SQLi**: this pattern uses delay functions to force the database to wait a precise number of seconds. Attackers use this when the application returns no visible error on screen, to confirm the injection through timing inference. An artificial network delay triggered by user input immediately confirms the parameter is vulnerable.
+
+   ```
+   GET /profil.php?id=5+AND+(SELECT+7711+FROM+(SELECT(SLEEP(5)))b) HTTP/1.1
+   ```
+
+7. **Mixed case, WAF bypass**: this pattern deliberately alternates uppercase and lowercase in SQL keywords, like `UnIoN SeLeCt`. Databases are often case-insensitive, unlike the simplistic signatures used by web application firewalls (WAF). This technique exists purely to trick text-based security filters by hiding forbidden words.
+
+   ```
+   GET /view.php?cat=9+uNiOn+sElEcT+version() HTTP/1.1
+   ```
+
+8. **/\*!50000...\*/, MySQL executable comments**: this pattern uses a MySQL-specific comment syntax that only executes if the server version is higher than the indicated number. It's an advanced evasion technique designed to hide malicious commands behind fake comments that WAFs ignore. Only the targeted MySQL server will interpret the code inside, confirming a targeted exploitation attempt.
+
+   ```
+   GET /news.php?id=-1+/*!50000UNION*//*!50000SELECT*/+1,2,3 HTTP/1.1
+   ```
+
+9. **0x hex, hexadecimal encoding**: this pattern replaces character strings with their hexadecimal representation prefixed by `0x`. The attacker avoids quotes that could be blocked or escaped by the web application. The database automatically converts the hex back to text, allowing complex payloads to be injected without tripping basic alerts.
+
+   ```
+   GET /main.php?id=1+AND+users=0x61646d696e HTTP/1.1
+   ```
+
+10. **A sudden 500 error, behavioral indicator**: this pattern shows up as an HTTP 500 status code (Internal Server Error) right after special characters are submitted. An isolated 500 error following truncated SQL syntax proves that user input broke the query behind the scenes. It means no validation is happening on the code side and the application is highly vulnerable.
+
+    ```
+    192.168.1.50 - - [31/Aug/2026:22:15:20] "GET /prod.php?id=1%27 HTTP/1.1" 500 244
+    ```
+
+## The real game changer: correlation
+
+In SOC detection, an isolated pattern often generates a false positive. The real leap in maturity comes from correlating events inside the SIEM.
+
+A critical alert (P1) should only fire when multiple weak signals are automatically cross-referenced against the same source IP within a tight time window (say, 5 minutes):
+
+- **Multi-pattern activity**: a sequence of evasion techniques (mixed case, hex encoding, quotes).
+- **Volume anomaly**: a sudden spike in HTTP response size (data exfiltration via `UNION SELECT`).
+- **Behavioral breakdown**: a spike in HTTP 500 errors (the database crashing under the injections).
+
+A concrete example of a SIEM rule (Splunk-style pseudocode):
+
+```
+pattern_sqli AND response_size > baseline*3 AND status_code=500 AND count > 5 in 5min -> alert p1
+```
+
+This rule only fires when several signals converge from the same source IP. That combination of factors is what turns a suspicion into certainty of an active attack.
+
+## Conclusion
+
+Mastering these signatures is necessary, but not sufficient. Against a determined attacker obfuscating payloads to bypass WAFs, static detection shows its limits. A SOC's real strength lies in a behavioral approach: correlating patterns with volume, timing, and response anomalies.
+
+Take care of yourself and your data.
