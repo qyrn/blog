@@ -1,0 +1,118 @@
+---
+title: "3 attack waves on my site in 5 days: what I learned"
+slug: "three-attack-waves-clubcine-2026"
+date: 2026-11-08
+lang: en
+translationSlug: "trois-vagues-attaque-clubcine-2026"
+type: incident
+category: Web
+difficulty: Medium
+tags: ["incident-response", "web-security", "rate-limiting", "cloudflare", "soc"]
+excerpt: "I launched a small movie club project to spread my passion for cinema, and I got attacked by a cyberattacker. How it went, how I reacted, how I fixed it."
+published: true
+---
+
+## Introduction
+
+I'm Qyrn, a self-taught apprentice SOC analyst, and I launched a small movie club project to spread my passion for cinema to others. I got attacked by a cyberattacker. In this article: how it went, how I reacted, how I fixed it.
+
+Transparency: I used Claude Code to investigate and implement the fixes. Things were happening that I only half understood, so I used it to analyze what was really going on for me and understand the why and the how. Then I asked it whether protecting things that way would be the best option or not, and then I gave it the order to do it, so it would be faster and my users wouldn't be disrupted.
+
+## Context
+
+Clubcine.xyz is a project I launched myself to spread my passion for cinema, by streaming all the films I love and the ones requested by the people who come to the site regularly, so they can share their passion too.
+
+The stack: Next.js / Vercel, Supabase, NAS + Cloudflare Tunnel.
+
+The project launched on September 7, with a peak of 1030 visitors and a very good reception, but it's the next day that everything flipped, following an ad on Twitter?
+
+I hadn't planned on getting attacked so fast, because there's nothing to get out of the project: no banking data, no payment available except donations, which are optional, nothing important to reach by trying cyberattacks, except annoying people.
+
+## Timeline
+
+| Date | Wave | What I saw | Result |
+| --- | --- | --- | --- |
+| Sept 8 | XSS injections in the chat, floods of the error log endpoint, floods of transactional emails | That he was spamming me in several different ways to repeat that my site was a vibecoded sieve and that I was just a rat for the **optional** donations | No XSS flaw was available, except in the links on the profile, but doing that was useless. So we fixed it, and we also added a sanitization filter at render time and constraints so the fields can only contain a URL on the expected domain |
+| Sept 9 | The ARCOM campaign started: he posed as ARCOM, signing his messages with names like "la brigade". His angle, once again, was to bring up that my site was a vibecoded sieve, donations too expensive for what it is (I pay for everything out of my own pocket without getting big donations), pure intimidation | He was attacking the log endpoints again, the movie and event suggestions, the bug reports, and the chat too. I also noticed they were Cloudflare IPs and not the attacker's, so having the IP was useless | What we did was close suggestions, bug reports, etc. to leave them only to people with an account, close the chat temporarily to leave it only to logged-in users with a verified account, and blacklist the words used by this attacker |
+| Sept 12 | 3 days later, he comes back: the logs and the chat again, but this time he crafts messages that look legitimate and not fabricated. He spoofs the source field to pass as the API's logs, same for the chat, scripted this time, through the API | Looking at the logs, we see he uses a standard user-agent, but from a VPS, which is strange because Cloudflare is supposed to block traffic from an online tool, so we know he comes to the chat on his own to spam | And then we reinforce what we did before: we ban the keywords he uses, the biggest ones, we limit traffic with no identity, we detect cadences, we progressively lock out the logs so it doesn't stress me out even more |
+
+## Wave 1: XSS + flood
+
+As I said above, in the logs I saw basic XSS attempts with `<script>alert`, and mostly flooding of everything he could reach.
+
+The attacker tried every possible flaw, but mostly flooding through the API.
+
+It failed because the XSS flaws weren't available: I had removed them beforehand with a security audit of my own, to put into practice what I'd been able to learn.
+
+In the moment, I was pretty stressed, because I didn't understand how my project could generate hate when I don't monetize anything.
+
+## Wave 2: the "ARCOM" campaign
+
+He impersonated ARCOM to scare me, intimidating me with attacks that could look like they came from ARCOM, flooding the chat, the movie and event suggestions, the bug reports, or even the error logs through the API.
+
+### Bypassing the rate limit
+
+The rate limit was bypassed because in SQL, `NULL` isn't `false`, it's "unknown". A `WHERE` clause only keeps rows where the condition is true, so if it's `NULL`, it keeps nothing.
+
+### The IP problem
+
+The problem was that it wasn't his IP, because Cloudflare, with `X-Forwarded-For`, takes the first value, and the first value behind a proxy is the proxy's.
+
+### Nickname rotation
+
+He kept changing nicknames to bypass the rate limit, with different intimidating nicknames, like "le rat", "la brigade", etc.
+
+### My decision to freeze the chat
+
+I weighed the pros and cons: if I freeze the chat, a lot of people can't talk anymore, but neither can he. If I leave it as is, he keeps spamming and bothering users. So I froze it only for people who weren't logged in, to give people with an account the chance to chat without any problem.
+
+## Wave 3: the scripted comeback
+
+The script imitated a real session of an ordinary user, with messages already written personally, getting around the rules I had set.
+
+In the logs, the cadences were completely human, but a bit scripted too. Same for the number of requests, everything looked human.
+
+Tempo is a better signal than the IP or the user-agent, because tempo lets you spot a certain precision, while the IP can be spoofed, and the user-agent too.
+
+Having an almost perfect tempo with a small offset was poorly done. What was well done was hiding his IP, as well as simulating a real browser's user-agent.
+
+## Assessing the attacker
+
+He's a script kiddie who knows a bit about what he's doing, he doesn't have the level of a professional pentester, but a moderate level.
+
+What I don't know: who is the attacker? What was his real reason for doing it?
+
+## Fixes put in place
+
+- Lock down the log endpoint, with a SQL limit of 30 per 10 minutes and an in-memory limit of 10 requests per minute per real IP, to know whether it's a real attack or just a bug.
+- Fix the SQL triggers, require logging in for suggestions, to prevent any illegitimate requests.
+- The chat's anonymous nickname is assigned by the server and not by the browser, so nobody can modify it.
+- The two Cloudflare rules applied to block traffic like from a script or the command line.
+
+## What I learned
+
+### Never trust what the client sends
+
+As I learned with the Zero Trust rule, no site is foolproof, there are always flaws. The best thing is to recheck everything and secure as much as possible, and above all the most critical ones.
+
+### Defense in depth
+
+The top layer gave way, from a lack of dedication on my part, because I didn't think I'd get cyberattacks for such a basic site. He got access to nothing private, except my email address in the DMARC, but nothing serious.
+
+### What I would do differently at the next launch
+
+Nothing different: I patched as much as possible, so there's nothing else I need to do to protect myself from this person.
+
+### What this episode taught me about SOC work
+
+To always check the basic flaws carefully, whatever the site, even if you tell yourself "it won't get attacked, nothing's important": it's always useful to know what your flaws are and how to fix them. And that I was good at checking logs and always had ideas to fix things, even if Claude did all the work on the code side and gave me the direction toward what was wrong.
+
+## What I still need to improve
+
+In logs and alerting, I find myself pretty average for my few months of learning. In monitoring, I don't think I'm good, I haven't been able to explore it more, so I don't know.
+
+My next steps: keep learning and improving on real tests like this one, even if it would be possible for it to be less stressful.
+
+## Conclusion
+
+2 months after the attacks, I've made decent progress, but not that much: I took a huge break because my PC died. It teaches me to improve, and I lived through a real situation. That's what happens when you don't fully check your site before opening: anything can happen.

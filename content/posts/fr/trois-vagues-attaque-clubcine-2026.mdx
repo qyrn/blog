@@ -1,0 +1,118 @@
+---
+title: "3 vagues d'attaque sur mon site en 5 jours : ce que j'ai appris"
+slug: "trois-vagues-attaque-clubcine-2026"
+date: 2026-11-08
+lang: fr
+translationSlug: "three-attack-waves-clubcine-2026"
+type: incident
+category: Web
+difficulty: Medium
+tags: ["incident-response", "web-security", "rate-limiting", "cloudflare", "soc"]
+excerpt: "J'ai lancé un petit projet de club ciné pour propager ma passion du cinéma, et j'ai subi des attaques par un cyberattaquant. Comment ça s'est passé, comment j'ai réagi, comment j'ai réglé ça."
+published: true
+---
+
+## Introduction
+
+Moi c'est Qyrn, apprenti analyste SOC en autodidacte, j'ai lancé un petit projet de club ciné pour propager ma passion du cinéma à autrui. J'ai subi des attaques par un cyberattaquant. Dans cet article : comment ça s'est passé, comment j'ai réagi, comment j'ai réglé ça.
+
+Transparence : j'ai utilisé Claude Code pour investiguer et implémenter les correctifs. Il se passait des choses que je comprenais à moitié, donc je l'ai utilisé pour qu'il m'analyse ce qui se passait réellement et comprendre le pourquoi du comment. Ensuite, je lui demandais si protéger en faisant ça serait la meilleure option ou non, pour ensuite lui donner l'ordre de le faire, pour que ça soit plus rapide et que mes utilisateurs ne soient pas dérangés.
+
+## Contexte
+
+Clubcine.xyz est un projet lancé par moi-même qui consiste à propager ma passion pour le cinéma, en diffusant tous les films que j'aime et ceux demandés par les gens qui viennent régulièrement sur le site, pour qu'ils partagent aussi leur passion.
+
+La stack : Next.js / Vercel, Supabase, NAS + Cloudflare Tunnel.
+
+Le projet a été lancé le 7 septembre, avec un pic à 1030 visiteurs et un très bon accueil, mais c'est le lendemain que tout a basculé, suite à une pub sur Twitter ?
+
+Je n'avais pas prévu d'être attaqué si vite, parce qu'il n'y a rien à tirer du projet : aucune donnée bancaire, aucun paiement disponible excepté les dons, qui sont optionnels, rien d'important à toucher en tentant des cyberattaques, à part embêter les gens.
+
+## Chronologie
+
+| Date | Vague | Ce que j'ai vu | Résultat |
+| --- | --- | --- | --- |
+| 8 sept | Des injections XSS dans le chat, des floods de l'endpoint des logs d'erreurs, des floods de mails transactionnels | Qu'il me spammait de plusieurs façons différentes pour me répéter que mon site était une passoire vibecodée et que je n'étais qu'un rat pour les dons **optionnels** | Aucune faille XSS n'était disponible, excepté dans les liens sur le profil, mais ça ne servait à rien de faire ça. Donc on l'a réglé, on a aussi ajouté un filtre de sanitisation au rendu et des contraintes pour que les champs ne puissent contenir qu'une URL sur le domaine attendu |
+| 9 sept | La campagne ARCOM a commencé : il se faisait passer pour l'ARCOM en signant ses messages avec des noms comme « la brigade ». Son angle, c'était encore une fois de citer le fait que mon site était une passoire vibecodée, des dons trop chers pour ce que c'est (je paye tout de ma poche sans avoir de gros dons), de la pure intimidation | Il attaquait encore les endpoints de logs, les suggestions de films et de soirées, les signalements de bugs, et le chat aussi. J'ai aussi remarqué que c'étaient des IP Cloudflare et pas celles de l'attaquant, donc avoir l'IP ne servait à rien | Ce qu'on a fait, c'était fermer les suggestions, les signalements de bugs, etc. pour les laisser seulement aux gens avec un compte, fermer le chat temporairement pour le laisser seulement aux connectés avec un compte validé, et blacklister les mots utilisés par cet attaquant |
+| 12 sept | 3 jours après, il revient : encore les logs et le chat, mais cette fois-ci il fabrique des messages qui paraissent légitimes et non fabriqués. Il usurpe le champ source pour se faire passer pour les logs de l'API, pareil pour le chat, en script cette fois, via l'API | En regardant les logs, on aperçoit qu'il utilise un user-agent standard, mais depuis un VPS, ce qui est bizarre car Cloudflare est censé bloquer depuis un outil en ligne, donc on sait qu'il vient sur le chat de lui-même en spammant | Et là, on renforce ce qu'on a fait précédemment : on bannit les mots-clés qu'il utilise, les plus gros, on limite le trafic sans identité, on détecte les cadences, on lockout progressivement les logs pour éviter que ça me stresse encore plus |
+
+## Vague 1 : XSS + flood
+
+Comme je l'ai dit plus haut, dans les logs, j'ai aperçu des tentatives de XSS basiques avec des `<script>alert`, ainsi que principalement du flood de tout ce qui lui était possible.
+
+L'attaquant a tenté toutes les failles possibles, mais principalement du flood par l'API.
+
+Ça a échoué parce que les failles XSS n'étaient pas disponibles : je les avais enlevées auparavant avec un audit cyber de ma part, pour mettre en œuvre ce que j'ai pu apprendre.
+
+Sur le moment, j'étais assez stressé, parce que je ne comprenais pas comment mon projet pouvait engendrer la haine alors que je ne monétise rien.
+
+## Vague 2 : la campagne « ARCOM »
+
+Il a usurpé l'identité de l'ARCOM pour pouvoir me faire peur, en m'intimidant avec des attaques pouvant ressembler à l'ARCOM, en floodant le chat, les suggestions de films et de soirées, les signalements de bugs ou bien même les logs d'erreurs via l'API.
+
+### Le contournement du rate-limit
+
+Le rate-limit a été contourné parce qu'en SQL, `NULL` ne vaut pas `false`, il vaut « inconnu ». Une clause `WHERE` ne garde que les lignes où la condition est vraie, du coup si elle est `NULL`, ça ne garde rien.
+
+### Le problème des IP
+
+Le problème était que ce n'était pas son IP, car Cloudflare, avec le `X-Forwarded-For`, prend la première valeur, et la première valeur derrière un proxy est celle du proxy.
+
+### La rotation de pseudo
+
+Il changeait de pseudo pour effectuer le contournement du rate-limit, avec des pseudos intimidants différents, du genre « le rat », « la brigade », etc.
+
+### Ma décision de geler le chat
+
+J'ai pesé le pour et le contre : si je gèle le chat, beaucoup de gens ne peuvent plus parler, mais lui non plus. Si je le laisse normal, il continue de spammer et embête les utilisateurs. Alors je l'ai gelé que pour les gens non connectés, pour laisser la chance aux gens avec un compte de discuter sans problème.
+
+## Vague 3 : le retour scripté
+
+Le script imitait une vraie session d'un utilisateur lambda, avec des messages déjà écrits personnellement, contournant les règles que j'avais mises.
+
+Dans les logs, les cadences étaient tout à fait humaines, mais un peu scriptées aussi. Pareil pour le nombre de requêtes, tout paraissait humain.
+
+Le tempo est un meilleur signal que l'IP ou le user-agent, parce que le tempo fait repérer une certaine précision, alors que l'IP peut être spoofée, et le user-agent aussi.
+
+Avoir un tempo quasiment parfait avec un petit décalage, c'était mal fait. Ce qui était bien fait, c'était de cacher son IP, ainsi que de simuler le user-agent d'un vrai navigateur.
+
+## Évaluation de l'attaquant
+
+C'est un script kiddie qui s'y connaît un peu dans ce qu'il fait, il a pas le niveau d'un pentester professionnel, mais un niveau modéré.
+
+Ce que je ne sais pas : qui est l'attaquant ? Pour quelle réelle raison il l'a fait ?
+
+## Correctifs mis en place
+
+- Verrouiller l'endpoint des logs, avec une limite SQL de 30 par 10 minutes et une limite en mémoire de 10 requêtes par minute et par IP réelle, pour savoir si c'est une vraie attaque ou un simple bug.
+- Réparer les triggers SQL, exiger une connexion obligatoire pour les suggestions, pour éviter toutes les demandes illégitimes.
+- Le pseudo anonyme du chat est attribué par le serveur et non par le navigateur, pour éviter que quiconque puisse le modifier.
+- Les deux règles Cloudflare appliquées pour bloquer les trafics comme avec un script ou par ligne de commande.
+
+## Ce que j'ai appris
+
+### Ne jamais faire confiance à ce que le client envoie
+
+Comme je l'ai appris avec la règle Zero Trust, aucun site n'est infaillible, il y a toujours des failles. Le mieux est de tout revérifier et de sécuriser le maximum possible, et surtout celles qui sont les plus critiques.
+
+### Défense en profondeur
+
+La couche haute a cédé, par manque de dévouement de ma part, parce que je ne pensais pas recevoir des cyberattaques pour un site si basique. Il n'a eu accès à rien de privé, sauf mon adresse mail dans le DMARC, mais rien n'est grave.
+
+### Ce que je ferais différemment au prochain lancement
+
+Rien de différent : j'ai patché le maximum, alors je n'ai rien d'autre à faire pour me protéger de cette personne.
+
+### Ce que cet épisode m'a appris sur le travail de SOC
+
+De toujours bien vérifier les failles basiques, peu importe le site, peu importe si on se dit « il va pas se faire attaquer, rien n'est important » : ça sert toujours de savoir quelles sont nos failles et comment les régler. Et que je savais bien vérifier les logs et que j'avais toujours des idées pour les régler, même si Claude a fait tout le travail côté code et m'a donné la direction vers ce qui allait pas.
+
+## Ce qu'il me reste à améliorer
+
+En logs et en alerting, je me trouve assez moyen pour mes quelques mois d'apprentissage. En monitoring, je me trouve pas bon, j'ai pas pu explorer ça plus, donc je ne sais pas.
+
+Mes prochaines étapes : continuer d'apprendre et m'améliorer sur des vrais tests comme celui-ci, même si ça serait possible que ça soit moins stressant.
+
+## Conclusion
+
+2 mois après les attaques, j'ai assez progressé, mais pas tellement : j'ai fait une énorme pause à cause de mon PC qui a lâché. Ça m'apprend à m'améliorer, et j'ai vécu une situation réelle. Voilà ce qui se passe quand on ne vérifie pas entièrement son site avant l'ouverture, tout peut arriver.
