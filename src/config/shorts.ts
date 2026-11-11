@@ -8,6 +8,10 @@ export const shortsChannelUrl = "https://www.youtube.com/@qyrnsec/shorts";
 
 export const shorts: Short[] = [
   {
+    id: "Wj1Pj4zj2iA",
+    title: "Comment repérer un mail de phishing en 30 secondes",
+  },
+  {
     id: "eD95ttXTSpg",
     title: "Comment un SOC repère une injection SQL dans les logs en 30 sec",
     articleSlug: "sqli-log-patterns-soc-2026",
@@ -17,3 +21,11 @@ export const shorts: Short[] = [
     title: "3 flags cookies que ton app oublie sûrement",
   },
 ];
+
+export function getShortPosterPath(id: string): string {
+  return `/shorts/${id}.webp`;
+}
+
+export function getShortUrl(id: string): string {
+  return `https://www.youtube.com/shorts/${id}`;
+}
