@@ -5,6 +5,7 @@ import Terminal from "@/components/mdx/Terminal";
 import Flag from "@/components/mdx/Flag";
 import Difficulty from "@/components/mdx/Difficulty";
 import ImageZoom from "@/components/mdx/ImageZoom";
+import Short from "@/components/mdx/Short";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -14,6 +15,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Flag,
     Difficulty,
     ImageZoom,
+    Short,
     ...components,
   };
 }

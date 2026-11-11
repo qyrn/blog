@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Terminal, Github, Target, Tag } from "lucide-react";
 import PostCard from "./PostCard";
 import FeaturedPostCard from "./FeaturedPostCard";
+import ShortsSection from "./ShortsSection";
 import { siteConfig } from "@/config/site";
 import type { Post } from "#site/content";
 
@@ -146,6 +147,10 @@ export default function HomeContent({ recent, tags }: HomeContentProps) {
             <p className="text-sm text-text-dim">No posts published yet.</p>
           </div>
         )}
+      </motion.section>
+
+      <motion.section variants={itemVariants}>
+        <ShortsSection />
       </motion.section>
 
       {tags.length > 0 && (
