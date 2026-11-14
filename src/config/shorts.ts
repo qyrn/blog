@@ -8,6 +8,10 @@ export const shortsChannelUrl = "https://www.youtube.com/@qyrnsec/shorts";
 
 export const shorts: Short[] = [
   {
+    id: "Xf-wAQGE0ho",
+    title: "Impossible travel : comment un SOC repère un compte volé",
+  },
+  {
     id: "Wj1Pj4zj2iA",
     title: "Comment repérer un mail de phishing en 30 secondes",
   },
