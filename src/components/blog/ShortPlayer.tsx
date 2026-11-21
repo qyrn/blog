@@ -18,7 +18,7 @@ export default function ShortPlayer({ id, title, isPlaying, onPlay }: ShortPlaye
           src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0`}
           title={title}
           allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-          sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
+          sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
           referrerPolicy="strict-origin-when-cross-origin"
           className="absolute inset-0 h-full w-full"
         />
